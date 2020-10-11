@@ -1,0 +1,103 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Capability",
+"class": "AttackCapability",
+"language": "GDScript",
+"path": "res://src/capabilities/Attack.gd"
+}, {
+"base": "Node",
+"class": "Capability",
+"language": "GDScript",
+"path": "res://src/Capability.gd"
+}, {
+"base": "Entity",
+"class": "Cave",
+"language": "GDScript",
+"path": "res://src/entities/Cave.gd"
+}, {
+"base": "Entity",
+"class": "Clubman",
+"language": "GDScript",
+"path": "res://src/entities/Clubman.gd"
+}, {
+"base": "KinematicBody2D",
+"class": "Entity",
+"language": "GDScript",
+"path": "res://src/Entity.gd"
+}, {
+"base": "Entity",
+"class": "Monument",
+"language": "GDScript",
+"path": "res://src/entities/Monument.gd"
+}, {
+"base": "Capability",
+"class": "MoveCapability",
+"language": "GDScript",
+"path": "res://src/capabilities/Move.gd"
+}, {
+"base": "Object",
+"class": "Selection",
+"language": "GDScript",
+"path": "res://src/Selection.gd"
+}, {
+"base": "Entity",
+"class": "Shaman",
+"language": "GDScript",
+"path": "res://src/entities/Shaman.gd"
+}, {
+"base": "Entity",
+"class": "StoneMaster",
+"language": "GDScript",
+"path": "res://src/entities/StoneMaster.gd"
+}, {
+"base": "Capability",
+"class": "TakeDamageCapability",
+"language": "GDScript",
+"path": "res://src/capabilities/TakeDamage.gd"
+}, {
+"base": "Object",
+"class": "UnitFactory",
+"language": "GDScript",
+"path": "res://src/factories/UnitFactory.gd"
+} ]
+_global_script_class_icons={
+"AttackCapability": "",
+"Capability": "",
+"Cave": "",
+"Clubman": "",
+"Entity": "",
+"Monument": "",
+"MoveCapability": "",
+"Selection": "",
+"Shaman": "",
+"StoneMaster": "",
+"TakeDamageCapability": "",
+"UnitFactory": ""
+}
+
+[application]
+
+config/name="Divine Bread"
+run/main_scene="res://scenes/TestLevel.tscn"
+config/icon="res://icon.png"
+
+[display]
+
+window/size/resizable=false
+
+[rendering]
+
+quality/driver/driver_name="GLES2"
+vram_compression/import_etc=true
+vram_compression/import_etc2=false
+environment/default_clear_color=Color( 0.14902, 0.4, 0.164706, 1 )
+environment/default_environment="res://default_env.tres"
