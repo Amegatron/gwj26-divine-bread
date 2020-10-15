@@ -9,10 +9,35 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "TextureButton",
+"class": "ActionButton",
+"language": "GDScript",
+"path": "res://src/ui/ActionButton.gd"
+}, {
+"base": "VBoxContainer",
+"class": "ActionIcon",
+"language": "GDScript",
+"path": "res://src/ui/ActionIcon.gd"
+}, {
+"base": "HBoxContainer",
+"class": "ActionInfos",
+"language": "GDScript",
+"path": "res://src/ui/BaloonActionsInfo.gd"
+}, {
+"base": "PanelContainer",
+"class": "ActionsBaloon",
+"language": "GDScript",
+"path": "res://src/ui/ActionsBaloon.gd"
+}, {
 "base": "Capability",
 "class": "AttackCapability",
 "language": "GDScript",
 "path": "res://src/capabilities/Attack.gd"
+}, {
+"base": "HBoxContainer",
+"class": "BottomBar",
+"language": "GDScript",
+"path": "res://src/ui/BottomBar.gd"
 }, {
 "base": "Node",
 "class": "Capability",
@@ -34,6 +59,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://src/Entity.gd"
 }, {
+"base": "Capability",
+"class": "GenerateBreadCapability",
+"language": "GDScript",
+"path": "res://src/capabilities/GenerateBread.gd"
+}, {
 "base": "Entity",
 "class": "Monument",
 "language": "GDScript",
@@ -43,6 +73,16 @@ _global_script_classes=[ {
 "class": "MoveCapability",
 "language": "GDScript",
 "path": "res://src/capabilities/Move.gd"
+}, {
+"base": "ProgressBaseCapability",
+"class": "ProduceUnitCapability",
+"language": "GDScript",
+"path": "res://src/capabilities/ProduceUnit.gd"
+}, {
+"base": "Capability",
+"class": "ProgressBaseCapability",
+"language": "GDScript",
+"path": "res://src/capabilities/ProgressBase.gd"
 }, {
 "base": "Object",
 "class": "Selection",
@@ -70,13 +110,21 @@ _global_script_classes=[ {
 "path": "res://src/factories/UnitFactory.gd"
 } ]
 _global_script_class_icons={
+"ActionButton": "",
+"ActionIcon": "",
+"ActionInfos": "",
+"ActionsBaloon": "",
 "AttackCapability": "",
+"BottomBar": "",
 "Capability": "",
 "Cave": "",
 "Clubman": "",
 "Entity": "",
+"GenerateBreadCapability": "",
 "Monument": "",
 "MoveCapability": "",
+"ProduceUnitCapability": "",
+"ProgressBaseCapability": "",
 "Selection": "",
 "Shaman": "",
 "StoneMaster": "",
@@ -93,6 +141,10 @@ config/icon="res://icon.png"
 [display]
 
 window/size/resizable=false
+
+[gui]
+
+timers/tooltip_delay_sec=0.2
 
 [rendering]
 

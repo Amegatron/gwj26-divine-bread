@@ -9,6 +9,12 @@ func _init():
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	$Sprite.material = $Sprite.material.duplicate(true)
+	
+	var cap = ProduceUnitCapability.new()
+	cap.capabilityName = "ProduceClubman"
+	cap.hotkey = KEY_A
+	cap.targetUnit = "Clubman"
+	add_capability(cap)
 
 func _set_is_selected(value):
 	._set_is_selected(value)

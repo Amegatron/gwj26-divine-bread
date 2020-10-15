@@ -10,6 +10,8 @@ func _init():
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	$Sprite.material = $Sprite.material.duplicate(true)
+	var testCap = GenerateBreadCapability.new()
+	add_capability(testCap)
 
 func _set_is_selected(value):
 	._set_is_selected(value)

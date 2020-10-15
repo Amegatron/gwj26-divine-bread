@@ -21,3 +21,8 @@ static func createClubman(team):
 	entity.add_capability(cap)
 	
 	return entity
+
+static func createUnitByName(name, team):
+	match name:
+		"Clubman":
+			return createClubman(team)

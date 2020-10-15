@@ -11,6 +11,9 @@ var actualTarget
 
 func _init():
 	capabilityName = "Attack"
+	hotkey = KEY_A
+	isInHotBar = true
+	isTargeted = true
 
 func _set_owner(value):
 	._set_owner(value)

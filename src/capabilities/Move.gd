@@ -11,6 +11,9 @@ const CAPABILITY_NAME = "Move"
 
 func _init():
 	capabilityName = CAPABILITY_NAME
+	hotkey = KEY_M
+	isInHotBar = true
+	isTargeted = true
 
 func perform(args, internal = false):
 	if need_to_move(args["target"]):

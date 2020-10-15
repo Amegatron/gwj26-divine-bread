@@ -21,7 +21,7 @@ func startSelection(pos):
 	rect.rect_position = pos
 	rect.show_on_top = true
 	selectionRect = rect
-	level.add_child(rect)
+	level.canvasLayer.add_child(rect)
 	
 func continueSelection(pos):
 	var sPos = selectionStartPos
@@ -41,7 +41,7 @@ func endSelection(pos):
 		
 	var oldSelectedEntities = selectedEntities
 	
-	var entities = level.get_node("Entities").get_children()
+	var entities = level.entities.get_children()
 	var ourShape = RectangleShape2D.new()
 	ourShape.extents = selectionRect.rect_size / 2
 	var ourTransform = Transform2D(0, selectionRect.rect_position + ourShape.extents)
@@ -77,25 +77,12 @@ func endSelection(pos):
 	selectionStartPos = Vector2(0, 0)
 	
 	emit_signal("new_selection", selectedEntities, oldSelectedEntities)
-	
-func get_entity_at_position(position):	
-	var ourShape = RectangleShape2D.new()
-	ourShape.extents = Vector2(1, 1)
-	var ourTransform = Transform2D(0, position)
-
-	var entities = level.get_node("Entities").get_children()
-	for obj in entities:
-		if obj is Entity and obj.has_node("SelectionArea"):
-			var area = obj.get_node("SelectionArea")
-			var shape = area.shape_owner_get_shape(0, 0)
-			var shapeTransform = area.shape_owner_get_transform(0) * area.global_transform
-			
-			if shape.collide(shapeTransform, ourShape, ourTransform):
-				return obj
-				
-	return null
 
 func send_action_to_entities(action, args):
 	for entity in selectedEntities:
 		if entity:
 			entity.perform_action(action, args)
+			
+func send_action_to_entities_by_hotkey(hotkey, args):
+	for entity in selectedEntities:
+		entity.perform_action_by_hotkey(hotkey, args)
