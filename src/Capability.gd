@@ -26,7 +26,7 @@ func cancel():
 	pass
 
 func _get_icon():
-	return "res://icon.png"
+	return icon
 
 func _set_is_available(value):
 	isAvailable = value

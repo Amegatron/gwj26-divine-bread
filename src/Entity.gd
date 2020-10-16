@@ -5,7 +5,7 @@ class_name Entity
 var health : int setget _set_health
 var armor : int
 var capabilities = {}
-var currentAction
+var currentAction setget _set_current_action
 var type
 var isSelectable = true
 var team : int
@@ -17,6 +17,8 @@ var level
 var defaultTargetAction = "Move"
 
 var infoBaloon
+var actionsInfo
+var actionProgressInfo
 
 const LOOK_LEFT = -1
 const LOOK_RIGHT = 1
@@ -29,6 +31,7 @@ const TEAM_ENEMY = 2
 
 signal action_changed(oldAction, newAction)
 signal animation_signal(signalName)
+signal capability_added(capability)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -40,6 +43,13 @@ func _ready():
 			infoBaloon = _create_info_baloon()
 			baloonPos.add_child(infoBaloon)
 			infoBaloon.visible = false
+			
+			actionsInfo = _create_actions_info()
+			actionProgressInfo = _create_progress_info()
+			infoBaloon.set_baloon_content(actionsInfo)
+			
+	connect("action_changed", self, "_on_current_action_changed")
+	connect("capability_added", self, "_on_capability_added")
 	
 func _physics_process(delta):
 	for capName in capabilities:
@@ -56,8 +66,10 @@ func get_capability(capabilityName):
 		return null
 
 func add_capability(capability):
-	capability.ownerEntity = self
-	capabilities[capability.capabilityName] = capability
+	if !capabilities.has(capability.capabilityName):
+		capability.ownerEntity = self
+		capabilities[capability.capabilityName] = capability
+		emit_signal("capability_added", capability)
 	
 func remove_capability(capabilityName):
 	if capabilities.has(capabilityName):
@@ -72,11 +84,11 @@ func perform_action(actionName, args, internal = false):
 		if !internal:
 			if currentAction:
 				currentAction.cancel()
-			currentAction = cap
+			self.currentAction = cap
 			
 		return cap.perform(args, internal)
 	else:
-		currentAction = null
+		# self.currentAction = null
 		return false
 	
 func perform_action_by_hotkey(hotkey, args, internal = false):
@@ -109,12 +121,13 @@ func _set_is_selected(value):
 		return
 		
 	if value:
-		if !currentAction:
-			var info = _create_actions_info()
-			infoBaloon.set_baloon_content(info)
+		if !currentAction:			
+			if actionsInfo.capabilities.size() > 0:
+				infoBaloon.visible = true
+			else:
+				infoBaloon.visible = false
 		else:
-			pass
-		infoBaloon.visible = true
+			infoBaloon.visible = true
 	else:
 		infoBaloon.visible = false
 
@@ -150,3 +163,25 @@ func _create_actions_info():
 			actionsInfo.add_capability(cap)
 			
 	return actionsInfo
+
+func _create_progress_info():
+	var progressInfo = load("res://scenes/ui/ProgressInfo.tscn").instance()
+	return progressInfo
+	
+func _set_current_action(value):
+	var prevAction = currentAction
+	if prevAction != value:
+		currentAction = value
+		emit_signal("action_changed", prevAction, value)
+
+func _on_current_action_changed(oldValue, newValue):
+	if infoBaloon:
+		if newValue is ProgressBaseCapability:
+			actionProgressInfo.trackedCapability = newValue
+			infoBaloon.set_baloon_content(actionProgressInfo)
+		else:
+			infoBaloon.set_baloon_content(actionsInfo)
+
+func _on_capability_added(capability):
+	if actionsInfo && capability.hotkey:
+		actionsInfo.add_capability(capability)

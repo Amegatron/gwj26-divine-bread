@@ -13,4 +13,4 @@ func _clear_baloon_content():
 	if container:
 		var children = container.get_children()
 		for child in children:
-			container.remove_child(child)	
+			container.remove_child(child)

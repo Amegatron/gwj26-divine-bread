@@ -14,6 +14,14 @@ func _ready():
 		if ent is Entity:
 			ent.level = self
 	
+	var cap = ProduceUnitCapability.new()
+	cap.capabilityName = "ProduceClubman"
+	cap.timeNeeded = 10
+	cap.hotkey = KEY_C
+	cap.targetUnit = "Clubman"
+	cap.icon = "res://images/icons/clubman.png"
+	$MapContainer/Entities/Cave.add_capability(cap)
+	
 	for i in range(8):
 		unit = UnitFactory.createClubman(Entity.TEAM_PLAYER)
 		unit.position = Vector2(300 + randi() % 50, 250 + i*40)

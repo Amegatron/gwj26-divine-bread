@@ -2,7 +2,10 @@ extends HBoxContainer
 
 class_name ActionInfos
 
+var capabilities = []
+
 func add_capability(cap):
+	capabilities.append(cap)
 	var icon = _create_action_icon(cap)
 	add_child(icon)
 	
