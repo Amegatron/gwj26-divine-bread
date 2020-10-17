@@ -5,6 +5,7 @@ class_name ProduceUnitCapability
 var targetUnit
 
 func progress_finished():
+	ownerEntity.currentAction = null
 	var unit = UnitFactory.createUnitByName(targetUnit, ownerEntity.team)
 	if ownerEntity.has_node("ProduceArea"):
 		var area = ownerEntity.get_node("ProduceArea")

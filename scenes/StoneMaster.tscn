@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://src/entities/StoneMaster.gd" type="Script" id=1]
 [ext_resource path="res://images/stone_m_head.png" type="Texture" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://sounds/unit_produced_v1.wav" type="AudioStream" id=7]
 [ext_resource path="res://sounds/ranged_attack.wav" type="AudioStream" id=8]
 [ext_resource path="res://sounds/confirm.wav" type="AudioStream" id=9]
+[ext_resource path="res://src/TestAnimationPlayer.gd" type="Script" id=10]
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 6.5423
@@ -96,6 +97,47 @@ tracks/2/keys = {
 }
 
 [sub_resource type="Animation" id=4]
+resource_name = "Pray"
+length = 2.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprites/Arm:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5, 1.5, 2 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1, -12 ), Vector2( -0.999972, -16 ), Vector2( -0.999972, -16 ), Vector2( 1, -12 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprites/Arm:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5, 1.5, 2 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 60.0, 60.0, 0.0 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Sprites/Head:rotation_degrees")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.5, 1.5, 2 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 30.0, 30.0, 0.0 ]
+}
+
+[sub_resource type="Animation" id=5]
 loop = true
 tracks/0/type = "bezier"
 tracks/0/path = NodePath("Sprites:scale:y")
@@ -108,14 +150,17 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 0.5, 1 )
 }
 
-[sub_resource type="CircleShape2D" id=5]
+[sub_resource type="CircleShape2D" id=6]
 radius = 222.226
 
-[sub_resource type="CircleShape2D" id=6]
+[sub_resource type="CircleShape2D" id=7]
 radius = 252.918
 
-[sub_resource type="RectangleShape2D" id=7]
+[sub_resource type="RectangleShape2D" id=8]
 extents = Vector2( 11.756, 17.4738 )
+
+[sub_resource type="CircleShape2D" id=9]
+radius = 13.9321
 
 [node name="StoneMaster" type="KinematicBody2D"]
 rotation = -7.096e-06
@@ -146,10 +191,10 @@ texture = ExtResource( 4 )
 offset = Vector2( -0.00172119, -8.05359 )
 
 [node name="Head" type="Sprite" parent="Sprites"]
-position = Vector2( 0.0545359, -0.132186 )
+position = Vector2( -0.0598741, -20.6224 )
 scale = Vector2( 2, 2 )
 texture = ExtResource( 2 )
-offset = Vector2( -0.0271975, -9.95983 )
+offset = Vector2( 0.0300075, 0.285268 )
 
 [node name="Arm" type="Sprite" parent="Sprites"]
 position = Vector2( 1, -12 )
@@ -166,26 +211,29 @@ shape = SubResource( 1 )
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/Attack = SubResource( 2 )
 anims/Death = SubResource( 3 )
-anims/Walk = SubResource( 4 )
+anims/Pray = SubResource( 4 )
+anims/Walk = SubResource( 5 )
+script = ExtResource( 10 )
 
 [node name="AttackArea" type="Area2D" parent="."]
+visible = false
 position = Vector2( -5.6768e-05, 0 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea"]
-shape = SubResource( 5 )
+shape = SubResource( 6 )
 
 [node name="SightArea" type="Area2D" parent="."]
 visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SightArea"]
-shape = SubResource( 6 )
+shape = SubResource( 7 )
 
 [node name="SelectionArea" type="Area2D" parent="."]
 visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SelectionArea"]
 position = Vector2( 0.000115633, -16.2941 )
-shape = SubResource( 7 )
+shape = SubResource( 8 )
 
 [node name="HealthBar" parent="." instance=ExtResource( 6 )]
 visible = false
@@ -200,6 +248,7 @@ margin_bottom = 5.0
 rect_min_size = Vector2( 20, 3 )
 
 [node name="ProjectileStartingPosition" type="Position2D" parent="."]
+visible = false
 position = Vector2( -7.8571, -18.2401 )
 
 [node name="ProducedSound" type="AudioStreamPlayer" parent="."]
@@ -210,3 +259,11 @@ stream = ExtResource( 8 )
 
 [node name="ConfirmSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 9 )
+
+[node name="PrayerArea" type="Area2D" parent="."]
+visible = false
+collision_layer = 8
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PrayerArea"]
+shape = SubResource( 9 )

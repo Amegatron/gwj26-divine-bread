@@ -50,7 +50,7 @@ scale = Vector2( 2, 2 )
 texture = ExtResource( 1 )
 
 [node name="cliff_texture_bw2" type="Sprite" parent="MapContainer"]
-position = Vector2( 1802, -254.332 )
+position = Vector2( 1800, -254.332 )
 scale = Vector2( 2, 2 )
 texture = ExtResource( 1 )
 flip_h = true

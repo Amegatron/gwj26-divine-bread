@@ -12,12 +12,21 @@ func perform(args, internnal = false):
 	if !ownerEntity.currentAction:
 		ownerEntity.currentAction = self
 		progressDeltaCounter = 0
+		return true
+	
+	return false
 		
 func process(delta):
 	if ownerEntity.currentAction == self:
-		progressDeltaCounter += delta
+		var actualIncrement = delta
+		
+		if ownerEntity.has_capability("Prayable"):
+			var cap = ownerEntity.get_capability("Prayable")
+			actualIncrement *= cap.get_prayer_bonus()
+			
+		progressDeltaCounter += actualIncrement
 		if progressDeltaCounter >= timeNeeded:
-			progressDeltaCounter = 0
+			progressDeltaCounter -= timeNeeded
 			ownerEntity.currentAction = null
 			progress_finished()
 			

@@ -25,6 +25,11 @@ _global_script_classes=[ {
 "path": "res://src/ui/BaloonActionsInfo.gd"
 }, {
 "base": "PanelContainer",
+"class": "ActionTooltip",
+"language": "GDScript",
+"path": "res://src/ui/ActionTooltip.gd"
+}, {
+"base": "PanelContainer",
 "class": "ActionsBaloon",
 "language": "GDScript",
 "path": "res://src/ui/ActionsBaloon.gd"
@@ -89,10 +94,25 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://src/capabilities/Move.gd"
 }, {
+"base": "Node2D",
+"class": "OneTimeSound",
+"language": "GDScript",
+"path": "res://src/OneTimeSound.gd"
+}, {
 "base": "Capability",
 "class": "PeriodicBaseCapability",
 "language": "GDScript",
 "path": "res://src/capabilities/PeriodicBase.gd"
+}, {
+"base": "Capability",
+"class": "PrayCapability",
+"language": "GDScript",
+"path": "res://src/capabilities/Pray.gd"
+}, {
+"base": "Capability",
+"class": "PrayableCapability",
+"language": "GDScript",
+"path": "res://src/capabilities/Prayable.gd"
 }, {
 "base": "ProduceUnitCapability",
 "class": "ProduceClubmanCabability",
@@ -144,6 +164,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://src/ui/RequirementRow.gd"
 }, {
+"base": "ProgressBaseCapability",
+"class": "ResearchStoneMasterCapability",
+"language": "GDScript",
+"path": "res://src/capabilities/researches/ResearchStoneMaster.gd"
+}, {
 "base": "PanelContainer",
 "class": "ResourceIndicator",
 "language": "GDScript",
@@ -168,6 +193,11 @@ _global_script_classes=[ {
 "class": "Shaman",
 "language": "GDScript",
 "path": "res://src/entities/Shaman.gd"
+}, {
+"base": "Object",
+"class": "SoundResources",
+"language": "GDScript",
+"path": "res://src/constants/resources/SoundResources.gd"
 }, {
 "base": "Entity",
 "class": "StoneMaster",
@@ -198,11 +228,22 @@ _global_script_classes=[ {
 "class": "UnitHouseCapacities",
 "language": "GDScript",
 "path": "res://src/constants/entities/UnitHouseCapacities.gd"
+}, {
+"base": "ProgressBaseCapability",
+"class": "UpgradeHouseCapability",
+"language": "GDScript",
+"path": "res://src/capabilities/researches/UpgradeHouse.gd"
+}, {
+"base": "ProgressBaseCapability",
+"class": "UpgradeMonumentCapability",
+"language": "GDScript",
+"path": "res://src/capabilities/researches/UpgradeMonument.gd"
 } ]
 _global_script_class_icons={
 "ActionButton": "",
 "ActionIcon": "",
 "ActionInfos": "",
+"ActionTooltip": "",
 "ActionsBaloon": "",
 "AttackCapability": "",
 "BottomBar": "",
@@ -216,7 +257,10 @@ _global_script_class_icons={
 "IconResources": "",
 "Monument": "",
 "MoveCapability": "",
+"OneTimeSound": "",
 "PeriodicBaseCapability": "",
+"PrayCapability": "",
+"PrayableCapability": "",
 "ProduceClubmanCabability": "",
 "ProduceStoneMasterCapability": "",
 "ProduceUnitCapability": "",
@@ -227,17 +271,21 @@ _global_script_class_icons={
 "RangedAttackCapability": "",
 "ReactOnAttackCapability": "",
 "RequirementRow": "",
+"ResearchStoneMasterCapability": "",
 "ResourceIndicator": "",
 "ResourceRequirement": "",
 "RockProjectile": "",
 "Selection": "",
 "Shaman": "",
+"SoundResources": "",
 "StoneMaster": "",
 "TakeDamageCapability": "",
 "TeamResources": "",
 "TopBar": "",
 "UnitFactory": "",
-"UnitHouseCapacities": ""
+"UnitHouseCapacities": "",
+"UpgradeHouseCapability": "",
+"UpgradeMonumentCapability": ""
 }
 
 [application]
@@ -248,7 +296,6 @@ config/icon="res://icon.png"
 
 [display]
 
-window/size/fullscreen=true
 window/stretch/mode="viewport"
 window/stretch/aspect="keep_height"
 
@@ -258,6 +305,8 @@ timers/tooltip_delay_sec=0.2
 
 [layer_names]
 
+2d_render/layer_3="prayable"
+2d_render/layer_4="prayer"
 2d_render/layer_5="projectiles"
 
 [rendering]

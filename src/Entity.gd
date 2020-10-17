@@ -36,9 +36,11 @@ const TEAM_ENEMY = 2
 signal action_changed(oldAction, newAction)
 signal animation_signal(signalName)
 signal capability_added(capability)
+signal capability_removed(capabilityName)
 signal health_changed(oldHealth, newHealth)
 signal died
 signal action_performed(capability, args, result)
+signal custom_capability_signal(capability, signalName, args)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -60,6 +62,7 @@ func _ready():
 				
 	connect("action_changed", self, "_on_current_action_changed")
 	connect("capability_added", self, "_on_capability_added")
+	connect("capability_removed", self, "_on_capability_removed")
 	
 func _physics_process(delta):
 	for capName in capabilities:
@@ -84,6 +87,7 @@ func add_capability(capability):
 func remove_capability(capabilityName):
 	if capabilities.has(capabilityName):
 		capabilities.erase(capabilityName)
+		emit_signal("capability_removed", capabilityName)
 		
 func has_capability(capabilityName):
 	return capabilities.has(capabilityName)
@@ -95,18 +99,15 @@ func perform_action(actionName, args, internal = false):
 			return false
 			
 		if level.gameManager.are_requirements_met(cap.requirements, team):
-			level.gameManager.consume_requirements(cap.requirements, team)
-			
-			if !internal:
-				if currentAction:
-					currentAction.cancel()
-				self.currentAction = cap
-				
+			# TODO: check that all caps return true or false
 			var result = cap.perform(args, internal)
-			emit_signal("action_performed", cap, args, result)
+				
+			if result:
+				level.gameManager.consume_requirements(cap.requirements, team)
+				emit_signal("action_performed", cap, args, result)
+				
 			return result
 	else:
-		# self.currentAction = null
 		return false
 	
 func perform_action_by_hotkey(hotkey, args, internal = false):
@@ -198,6 +199,8 @@ func _set_current_action(value):
 	var prevAction = currentAction
 	if prevAction != value:
 		currentAction = value
+		if prevAction:
+			prevAction.cancel()
 		emit_signal("action_changed", prevAction, value)
 
 func _on_current_action_changed(oldValue, newValue):
@@ -219,3 +222,15 @@ func _set_is_dead(value):
 
 func _get_house_cost():
 	return houseCapacityCost
+
+func _on_capability_removed(capabilityName):
+	if actionsInfo:
+		actionsInfo.remove_capability(capabilityName)
+
+	if actionsInfo.capabilities.size() > 0:
+		infoBaloon.visible = true
+	else:
+		infoBaloon.visible = false
+
+func emit_capability_signal(capability, signalName, args):
+	emit_signal("custom_capability_signal", capability, signalName, args)

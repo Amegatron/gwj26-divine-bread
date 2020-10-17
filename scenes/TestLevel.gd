@@ -19,11 +19,13 @@ func _ready():
 	gameManager.add_team(Entity.TEAM_PLAYER)
 	gameManager.add_team(Entity.TEAM_ENEMY)
 	
+	gameManager.get_team_resource(Entity.TEAM_PLAYER).set_resource_by_type(TeamResources.TYPE_BREADFORCE, 10)
+	
 	_init_entities()
 		
-	for i in range(6):
-		unit = UnitFactory.createStoneMaster(Entity.TEAM_PLAYER)
-		unit.position = Vector2(300 + randi() % 50, 250 + i*40)
+	for i in range(2):
+		unit = UnitFactory.createClubman(Entity.TEAM_PLAYER)
+		unit.position = Vector2(500 + randi() % 50, 250 + i*50)
 		add_entity(unit)
 		
 	for i in range(8):
@@ -41,19 +43,33 @@ func _init_entities():
 			ent.level = self
 
 	var cap = ProduceClubmanCabability.new()
-	cap.timeNeeded = 2
+#	cap.timeNeeded = 10
 	cap.hotkey = KEY_C
 	$MapContainer/Entities/Cave.add_capability(cap)
 
-	cap = ProduceStoneMasterCapability.new()
-	cap.timeNeeded = 2
-	cap.hotkey = KEY_S
+	cap = UpgradeHouseCapability.new()
+#	cap.timeNeeded = 30
+	cap.hotkey = KEY_U
 	$MapContainer/Entities/Cave.add_capability(cap)
+	
+#	cap = ProduceStoneMasterCapability.new()
+#	cap.timeNeeded = 10
+#	cap.hotkey = KEY_S
+#	$MapContainer/Entities/Cave.add_capability(cap)
 	
 	cap = GenerateBreadCapability.new()
 	$MapContainer/Entities/Monument.add_capability(cap)
 	
 	cap = TakeDamageCapability.new()
+	$MapContainer/Entities/Monument.add_capability(cap)
+	
+	cap = ResearchStoneMasterCapability.new()
+	$MapContainer/Entities/Monument.add_capability(cap)
+	
+	cap = PrayableCapability.new()
+	$MapContainer/Entities/Monument.add_capability(cap)
+	
+	cap = UpgradeMonumentCapability.new()
 	$MapContainer/Entities/Monument.add_capability(cap)
 
 func get_capability_by_hotkey_in_selection(scancode):

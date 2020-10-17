@@ -4,41 +4,34 @@ class_name ActionIcon
 
 onready var textureRect = $MarginContainer/VBoxContainer/TextureRect setget , _get_texture_rect
 onready var label = $MarginContainer/VBoxContainer/Label setget , _get_label
-onready var requirementsContainer = $MarginContainer/VBoxContainer/Requirements setget , _get_requirements_container
 
-var icon setget _set_icon
-var hotkey setget _set_hotkey
-var isAvailable = true setget _set_is_available
+var capability setget _set_capability
+var tooltip
 
 func _ready():
-	_set_icon(icon)
-	_set_hotkey(hotkey)
-	_set_is_available(isAvailable)
+	_set_capability(capability)
 
-func _set_is_available(value):
-	isAvailable = value
+func _set_capability(cap):
+	capability = cap
+	_set_icon(load(cap.icon))
+	_set_hotkey(cap.hotkey)
+
+	tooltip = _create_tooltip()
 	
-	if isAvailable:
+func _set_is_available(value):
+	if value:
 		modulate = Color(1, 1, 1, 1)
 	else:
 		modulate = Color(1, 1, 1, 0.5)
 	
 func _set_icon(value):
-	icon = value
 	if textureRect:
-		textureRect.texture = icon
+		textureRect.texture = value
 	
 func _set_hotkey(value):
-	hotkey = value	
 	if label:
-		label.text = OS.get_scancode_string(hotkey)
+		label.text = OS.get_scancode_string(value)
 		
-func _get_requirements_container():
-	if !requirementsContainer:
-		requirementsContainer = get_node("MarginContainer/VBoxContainer/Requirements")
-		
-	return requirementsContainer
-
 func _get_label():
 	if !label:
 		label = get_node("MarginContainer/VBoxContainer/Label")
@@ -50,3 +43,9 @@ func _get_texture_rect():
 		textureRect = get_node("MarginContainer/VBoxContainer/TextureRect")
 		
 	return textureRect
+
+func _create_tooltip():
+	var node = load("res://scenes/ui/ActionTooltip.tscn").instance()
+	node.capability = capability
+	
+	return node

@@ -20,6 +20,9 @@ func perform(args, internal = false):
 		if !ownerEntity.get_node("ConfirmSound").playing:
 			ownerEntity.get_node("ConfirmSound").play()
 
+	if !internal:
+		ownerEntity.currentAction = self
+		
 	if need_to_move(args["target"]):
 		currentTarget = args["target"]
 		return true

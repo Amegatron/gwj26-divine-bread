@@ -2,17 +2,19 @@ extends PeriodicBaseCapability
 
 class_name GenerateBreadCapability
 
-var amount = 1
-
 func _init():
 	capabilityName = "GenerateBread"
 	hotkey = null
-	period = 1
+	period = 5
 
 func _perform_periodic_capability():
-	ownerEntity.level.gameManager.get_team_resource(ownerEntity.team).breadForce += amount
-	print("+1 bread for team ", ownerEntity.team)
+	var res = ownerEntity.level.gameManager.get_team_resource(ownerEntity.team)
+	var monumentLevel = res.get_resource_by_type(TeamResources.TYPE_MONUMENT_LEVEL)
+	var amount = _get_amount_for_level(monumentLevel)
+	res.set_resource_by_type(TeamResources.TYPE_BREADFORCE, res.get_resource_by_type(TeamResources.TYPE_BREADFORCE) + amount)
 
+func _get_amount_for_level(level):
+	return level
+	
 func _get_period():
-	# TODO: paraying boosts speed
 	return period

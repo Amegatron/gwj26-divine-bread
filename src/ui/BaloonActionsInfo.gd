@@ -2,20 +2,36 @@ extends HBoxContainer
 
 class_name ActionInfos
 
-var capabilities = []
+var capabilities = {}
+
+signal show_tooltip(value)
 
 func add_capability(cap):
-	capabilities.append(cap)
+	capabilities[cap.capabilityName] = cap
 	var icon = _create_action_icon(cap)
 	add_child(icon)
 	
+func remove_capability(capName):
+	if capabilities.has(capName):
+		capabilities.erase(capName)
+	
+	for node in get_children():
+		if node.capability.capabilityName == capName:
+			remove_child(node)
+			
+func _on_icon_mouse_enter(icon):
+	if icon.tooltip:
+		emit_signal("show_tooltip", icon.tooltip)
+	
+func _on_icon_mouse_exit(icon):
+	emit_signal("show_tooltip", null)
+
 func _create_action_icon(cap):
 	var icon = load("res://scenes/ui/ActionIcon.tscn").instance()
-	icon.icon = load(cap.icon)
-	icon.hotkey = cap.hotkey
-	for req in cap.requirements:
-		var reqInfo = _create_requirement_info(req)
-		icon.requirementsContainer.add_child(reqInfo)
+	icon.capability = cap
+	
+	icon.connect("mouse_entered", self, "_on_icon_mouse_enter", [icon])
+	icon.connect("mouse_exited", self, "_on_icon_mouse_exit", [icon])
 		
 	return icon
 

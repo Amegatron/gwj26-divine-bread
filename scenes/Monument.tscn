@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://src/entities/Monument.gd" type="Script" id=1]
 [ext_resource path="res://images/pedestal_with_bread.png" type="Texture" id=2]
@@ -16,6 +16,9 @@ radius = 340.846
 [sub_resource type="CircleShape2D" id=3]
 radius = 199.522
 
+[sub_resource type="CircleShape2D" id=4]
+radius = 259.326
+
 [node name="Monument" type="KinematicBody2D"]
 script = ExtResource( 1 )
 
@@ -25,48 +28,6 @@ texture = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
 polygon = PoolVector2Array( 150.214, -58.4798, 205.486, 15.6698, -59.4793, 184.527, -180.282, 168.509, -218.993, 65.0589, -61.2143, -57.5359 )
-
-[node name="PrayPositions" type="Node2D" parent="."]
-visible = false
-
-[node name="Position2D" type="Position2D" parent="PrayPositions"]
-position = Vector2( 204, 51 )
-
-[node name="Position2D2" type="Position2D" parent="PrayPositions"]
-position = Vector2( 174, 75 )
-
-[node name="Position2D3" type="Position2D" parent="PrayPositions"]
-position = Vector2( 141, 99 )
-
-[node name="Position2D4" type="Position2D" parent="PrayPositions"]
-position = Vector2( 107, 123 )
-
-[node name="Position2D5" type="Position2D" parent="PrayPositions"]
-position = Vector2( 74, 148 )
-
-[node name="Position2D6" type="Position2D" parent="PrayPositions"]
-position = Vector2( 40, 167 )
-
-[node name="Position2D7" type="Position2D" parent="PrayPositions"]
-position = Vector2( -1, 192 )
-
-[node name="Position2D11" type="Position2D" parent="PrayPositions"]
-position = Vector2( 269, 61 )
-
-[node name="Position2D14" type="Position2D" parent="PrayPositions"]
-position = Vector2( 237, 96 )
-
-[node name="Position2D15" type="Position2D" parent="PrayPositions"]
-position = Vector2( 198, 128 )
-
-[node name="Position2D16" type="Position2D" parent="PrayPositions"]
-position = Vector2( 157, 159 )
-
-[node name="Position2D17" type="Position2D" parent="PrayPositions"]
-position = Vector2( 117, 187 )
-
-[node name="Position2D18" type="Position2D" parent="PrayPositions"]
-position = Vector2( 78, 211 )
 
 [node name="BonusArea" type="Area2D" parent="."]
 visible = false
@@ -95,3 +56,10 @@ margin_top = 197.0
 margin_right = 100.0
 margin_bottom = 207.0
 rect_min_size = Vector2( 200, 10 )
+
+[node name="PrayArea" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PrayArea"]
+shape = SubResource( 4 )

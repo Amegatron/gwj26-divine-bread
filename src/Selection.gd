@@ -29,12 +29,16 @@ func continueSelection(pos):
 	size.x = abs(pos.x - sPos.x)
 	size.y = abs(pos.y - sPos.y)
 	selectionRect.rect_size = size
-	if pos.x < sPos.x:
-		selectionRect.rect_position.x = pos.x
-	if pos.y < sPos.y:
-		selectionRect.rect_position.y = pos.y
+	if pos.x < sPos.x || pos.y < sPos.y:
+		var origin = level.get_viewport_transform().get_origin()
+		var newPos = selectionRect.rect_position
 		
-	selectionRect.rect_position = level.get_viewport_transform().xform(selectionRect.rect_position)
+		if pos.x < sPos.x:
+			newPos.x = pos.x + origin.x
+		if pos.y < sPos.y:
+			newPos.y = pos.y + origin.y
+			
+		selectionRect.rect_position = newPos
 			
 func endSelection(pos):
 	for entity in selectedEntities:

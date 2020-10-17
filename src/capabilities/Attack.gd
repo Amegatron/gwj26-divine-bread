@@ -26,9 +26,14 @@ func perform(args, internal = false):
 	else:
 		wanderingTargetedAttack = false
 	
+	if !internal:
+		ownerEntity.currentAction = self
+	
 	if !internal && ownerEntity.has_node("ConfirmSound") && ownerEntity.team == Entity.TEAM_PLAYER:
 		if !ownerEntity.get_node("ConfirmSound").playing:
 			ownerEntity.get_node("ConfirmSound").play()
+			
+	return true
 
 func process(delta):
 	if ownerEntity.currentAction && ownerEntity.currentAction != self:

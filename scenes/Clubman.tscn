@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://src/entities/Clubman.gd" type="Script" id=1]
 [ext_resource path="res://images/arm_with_club.png" type="Texture" id=2]
@@ -96,6 +96,47 @@ tracks/2/keys = {
 }
 
 [sub_resource type="Animation" id=4]
+resource_name = "Pray"
+length = 2.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprites/Arm:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5, 1.5, 2 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1, -12 ), Vector2( -0.999991, -13.3333 ), Vector2( -0.999991, -13.3333 ), Vector2( 1, -12 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprites/Arm:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5, 1.5, 2 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 60.0, 60.0, 0.0 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Sprites/Head:rotation_degrees")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.5, 1.5, 2 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 30.0, 30.0, 0.0 ]
+}
+
+[sub_resource type="Animation" id=5]
 loop = true
 tracks/0/type = "bezier"
 tracks/0/path = NodePath("Sprites:scale:y")
@@ -108,14 +149,17 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 0.5, 1 )
 }
 
-[sub_resource type="CircleShape2D" id=5]
+[sub_resource type="CircleShape2D" id=6]
 radius = 29.8431
 
-[sub_resource type="CircleShape2D" id=6]
+[sub_resource type="CircleShape2D" id=7]
 radius = 148.297
 
-[sub_resource type="RectangleShape2D" id=7]
+[sub_resource type="RectangleShape2D" id=8]
 extents = Vector2( 11.756, 17.4738 )
+
+[sub_resource type="CircleShape2D" id=9]
+radius = 15.7414
 
 [node name="Clubman" type="KinematicBody2D"]
 rotation = -7.096e-06
@@ -146,10 +190,10 @@ texture = ExtResource( 3 )
 offset = Vector2( -0.00172119, -8.05359 )
 
 [node name="Head" type="Sprite" parent="Sprites"]
-position = Vector2( 0.00355291, 0.336873 )
+position = Vector2( -0.240597, -21.0043 )
 scale = Vector2( 2, 2 )
 texture = ExtResource( 4 )
-offset = Vector2( -0.00172019, -8.19436 )
+offset = Vector2( 0.120355, 2.47625 )
 
 [node name="Arm" type="Sprite" parent="Sprites"]
 position = Vector2( 1, -12 )
@@ -166,27 +210,28 @@ shape = SubResource( 1 )
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/Attack = SubResource( 2 )
 anims/Death = SubResource( 3 )
-anims/Walk = SubResource( 4 )
+anims/Pray = SubResource( 4 )
+anims/Walk = SubResource( 5 )
 
 [node name="AttackArea" type="Area2D" parent="."]
 visible = false
 position = Vector2( -5.6768e-05, 0 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea"]
-shape = SubResource( 5 )
+shape = SubResource( 6 )
 
 [node name="SightArea" type="Area2D" parent="."]
 visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SightArea"]
-shape = SubResource( 6 )
+shape = SubResource( 7 )
 
 [node name="SelectionArea" type="Area2D" parent="."]
 visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SelectionArea"]
 position = Vector2( 0.000115633, -16.2941 )
-shape = SubResource( 7 )
+shape = SubResource( 8 )
 
 [node name="HealthBar" parent="." instance=ExtResource( 6 )]
 visible = false
@@ -208,3 +253,10 @@ stream = ExtResource( 8 )
 
 [node name="AttackSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 9 )
+
+[node name="PrayerArea" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PrayerArea"]
+shape = SubResource( 9 )

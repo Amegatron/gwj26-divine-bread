@@ -10,9 +10,12 @@ var activeOnDeadEntity = false
 var hotkey
 var isTargeted = false
 var icon setget , _get_icon
-var requirements = [] setget , _get_requirements
+var requirements = [] setget _set_requirements , _get_requirements
+var description = ""
 
 var ownerEntity setget _set_owner;
+
+signal requirements_changed
 
 func perform(args, internal = false):
 	pass
@@ -40,3 +43,7 @@ func _get_progress():
 
 func _get_requirements():
 	return requirements
+
+func _set_requirements(value):
+	requirements = value
+	emit_signal("requirements_changed")
