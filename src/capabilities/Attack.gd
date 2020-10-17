@@ -2,7 +2,7 @@ extends Capability
 
 class_name AttackCapability
 
-var strength = 1
+var strength = 10
 
 var currentTarget
 var targetPosition
@@ -25,12 +25,21 @@ func perform(args, internal = false):
 		wanderingTargetedAttack = args["wandering"]
 	else:
 		wanderingTargetedAttack = false
-	# print("Attacking!")
+	
+	if !internal && ownerEntity.has_node("ConfirmSound") && ownerEntity.team == Entity.TEAM_PLAYER:
+		if !ownerEntity.get_node("ConfirmSound").playing:
+			ownerEntity.get_node("ConfirmSound").play()
 
 func process(delta):
 	if ownerEntity.currentAction && ownerEntity.currentAction != self:
 		return
 			
+	if currentTarget is Entity && currentTarget.isDead:
+		currentTarget = null
+		if ownerEntity.currentAction == self:
+			ownerEntity.currentAction = null
+			return
+		
 	var minDistance = 100000000
 	var closestEnemy
 	var bodies = ownerEntity.sightArea.get_overlapping_bodies()
@@ -44,12 +53,6 @@ func process(delta):
 	var temporaryTarget = null
 	if closestEnemy && (!currentTarget || currentTarget is Vector2 || currentTarget is Entity && wanderingTargetedAttack):
 		temporaryTarget = closestEnemy
-
-	if currentTarget:
-		if currentTarget is Vector2:
-			targetPosition = currentTarget
-		elif currentTarget is Entity:
-			targetPosition = currentTarget.position
 
 	var moveCap = ownerEntity.get_capability("Move")
 	
@@ -79,11 +82,17 @@ func process(delta):
 		if ownerEntity.animationPlayer.current_animation != "Attack":
 			if moveCap && (typeof(moveCap.currentTarget) != typeof(finalTarget) || moveCap.currentTarget != finalTarget):
 				ownerEntity.perform_action("Move", {"target": finalTarget}, true)
+	elif ownerEntity.currentAction == self:
+		ownerEntity.currentAction = null
 
 func _on_owner_animation_signal(signalName):
 	if signalName == "Attack" && actualTarget && !actualTarget.isDead:
-		print(ownerEntity, " bam !!!")
-		actualTarget.perform_action("TakeDamage", {"strength": strength}, true)
+		if ownerEntity.has_node("AttackSound") && !ownerEntity.get_node("AttackSound").playing:
+			ownerEntity.get_node("AttackSound").play()
+		perform_actual_attack(actualTarget)
+
+func perform_actual_attack(target):
+	target.perform_action("TakeDamage", {"strength": strength}, true)
 
 func cancel():
 	currentTarget = null

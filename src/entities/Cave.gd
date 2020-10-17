@@ -8,7 +8,7 @@ func _init():
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	._ready()
+	# ._ready()
 	$Sprite.material = $Sprite.material.duplicate(true)
 
 func _set_is_selected(value):

@@ -2,7 +2,7 @@ extends Capability
 
 class_name ProgressBaseCapability
 
-var timeNeeded = 2
+var timeNeeded = 10
 var progressDeltaCounter = 0
 
 func _init():

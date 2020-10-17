@@ -9,12 +9,10 @@ onready var selectionCircle = $SelectionCircle
 
 func _init():
 	type = Entity.TYPE_UNIT
-	health = 10
+	maxHealth = 100
+	health = maxHealth
+	houseCapacityCost = UnitHouseCapacities.HOUSE_CAPACITY_CLUBMAN
 	
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
 func _set_is_selected(value):
 	._set_is_selected(value)
 	selectionCircle.visible = value

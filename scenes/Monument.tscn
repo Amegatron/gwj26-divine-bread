@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://src/entities/Monument.gd" type="Script" id=1]
 [ext_resource path="res://images/pedestal_with_bread.png" type="Texture" id=2]
 [ext_resource path="res://shanders/aura.shader" type="Shader" id=3]
+[ext_resource path="res://scenes/ui/HealthBar.tscn" type="PackedScene" id=4]
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 3 )
@@ -82,3 +83,15 @@ shape = SubResource( 3 )
 
 [node name="BaloonPosition" type="Position2D" parent="."]
 position = Vector2( 140.638, -151.02 )
+
+[node name="HealthBar" parent="." instance=ExtResource( 4 )]
+visible = false
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -100.0
+margin_top = 197.0
+margin_right = 100.0
+margin_bottom = 207.0
+rect_min_size = Vector2( 200, 10 )

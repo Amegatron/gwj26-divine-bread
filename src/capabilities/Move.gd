@@ -15,13 +15,13 @@ func _init():
 	isInHotBar = true
 	isTargeted = true
 
-func perform(args, internal = false):
+func perform(args, internal = false):	
+	if !internal && ownerEntity.has_node("ConfirmSound") && ownerEntity.team == Entity.TEAM_PLAYER:
+		if !ownerEntity.get_node("ConfirmSound").playing:
+			ownerEntity.get_node("ConfirmSound").play()
+
 	if need_to_move(args["target"]):
 		currentTarget = args["target"]
-		if currentTarget is Entity:
-			print("Moving to entity")
-		elif currentTarget is Vector2:
-			print("Moving to location")
 		return true
 	else:
 		 return false
@@ -35,6 +35,8 @@ func need_to_move(target):
 
 	return targetPosition.distance_to(ownerEntity.position) > distanceApproximation
 	
+# TODO: add simple avoidance behaviour: is entity is stuck moving, try to move
+# to a random close position, and the continue main move
 func process(delta):
 	if currentTarget:
 		var targetPosition
@@ -51,8 +53,11 @@ func process(delta):
 			for i in range(ownerEntity.get_slide_count()):
 				var coll = ownerEntity.get_slide_collision(i)
 				var target = (coll as KinematicCollision2D).collider
-				if target is Entity && target.type == Entity.TYPE_UNIT:
-					target.move_and_slide(coll.normal * -1 * speed / 4)
+				if target is Entity:
+					if currentTarget is Entity && target == currentTarget:
+						currentTarget = null
+					if target.type == Entity.TYPE_UNIT:
+						target.move_and_slide(coll.normal * -1 * speed / 4)
 					
 			var diff = ownerEntity.position.x - oldPos.x
 			if diff > 0:

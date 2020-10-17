@@ -6,6 +6,8 @@ func _init():
 	type = Entity.TYPE_BUILDING
 	defaultTargetAction = "Move" # Pray
 	team = Entity.TEAM_PLAYER
+	maxHealth = 5000
+	health = maxHealth
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

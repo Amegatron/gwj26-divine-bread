@@ -10,6 +10,7 @@ var activeOnDeadEntity = false
 var hotkey
 var isTargeted = false
 var icon setget , _get_icon
+var requirements = [] setget , _get_requirements
 
 var ownerEntity setget _set_owner;
 
@@ -36,3 +37,6 @@ func _get_is_available():
 
 func _get_progress():
 	return progress
+
+func _get_requirements():
+	return requirements

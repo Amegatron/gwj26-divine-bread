@@ -18,7 +18,7 @@ func startSelection(pos):
 	var rect = ReferenceRect.new()
 	rect.editor_only = false
 	rect.border_color = Color(0, 1, 0)
-	rect.rect_position = pos
+	rect.rect_position = level.get_viewport_transform().xform(pos)
 	rect.show_on_top = true
 	selectionRect = rect
 	level.canvasLayer.add_child(rect)
@@ -33,6 +33,8 @@ func continueSelection(pos):
 		selectionRect.rect_position.x = pos.x
 	if pos.y < sPos.y:
 		selectionRect.rect_position.y = pos.y
+		
+	selectionRect.rect_position = level.get_viewport_transform().xform(selectionRect.rect_position)
 			
 func endSelection(pos):
 	for entity in selectedEntities:
@@ -44,7 +46,7 @@ func endSelection(pos):
 	var entities = level.entities.get_children()
 	var ourShape = RectangleShape2D.new()
 	ourShape.extents = selectionRect.rect_size / 2
-	var ourTransform = Transform2D(0, selectionRect.rect_position + ourShape.extents)
+	var ourTransform = Transform2D(0, level.get_viewport_transform().xform_inv(selectionRect.rect_position) + ourShape.extents)
 
 	var tmpSelection = {
 		"units": [],

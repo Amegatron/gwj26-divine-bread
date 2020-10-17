@@ -14,7 +14,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://src/ui/ActionButton.gd"
 }, {
-"base": "VBoxContainer",
+"base": "PanelContainer",
 "class": "ActionIcon",
 "language": "GDScript",
 "path": "res://src/ui/ActionIcon.gd"
@@ -59,10 +59,25 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://src/Entity.gd"
 }, {
-"base": "Capability",
+"base": "Node",
+"class": "GameManager",
+"language": "GDScript",
+"path": "res://src/GameManager.gd"
+}, {
+"base": "PeriodicBaseCapability",
 "class": "GenerateBreadCapability",
 "language": "GDScript",
 "path": "res://src/capabilities/GenerateBread.gd"
+}, {
+"base": "ProgressBar",
+"class": "HealthBar",
+"language": "GDScript",
+"path": "res://src/ui/HealthBar.gd"
+}, {
+"base": "Object",
+"class": "IconResources",
+"language": "GDScript",
+"path": "res://src/constants/resources/IconResources.gd"
 }, {
 "base": "Entity",
 "class": "Monument",
@@ -73,6 +88,21 @@ _global_script_classes=[ {
 "class": "MoveCapability",
 "language": "GDScript",
 "path": "res://src/capabilities/Move.gd"
+}, {
+"base": "Capability",
+"class": "PeriodicBaseCapability",
+"language": "GDScript",
+"path": "res://src/capabilities/PeriodicBase.gd"
+}, {
+"base": "ProduceUnitCapability",
+"class": "ProduceClubmanCabability",
+"language": "GDScript",
+"path": "res://src/capabilities/production/ProduceClubman.gd"
+}, {
+"base": "ProduceUnitCapability",
+"class": "ProduceStoneMasterCapability",
+"language": "GDScript",
+"path": "res://src/capabilities/production/ProduceStoneMaster.gd"
 }, {
 "base": "ProgressBaseCapability",
 "class": "ProduceUnitCapability",
@@ -88,6 +118,46 @@ _global_script_classes=[ {
 "class": "ProgressInfo",
 "language": "GDScript",
 "path": "res://src/ui/ProgressInfo.gd"
+}, {
+"base": "Entity",
+"class": "Projectile",
+"language": "GDScript",
+"path": "res://src/entities/ProjectileBase.gd"
+}, {
+"base": "Capability",
+"class": "ProjectileCapability",
+"language": "GDScript",
+"path": "res://src/capabilities/Projectile.gd"
+}, {
+"base": "AttackCapability",
+"class": "RangedAttackCapability",
+"language": "GDScript",
+"path": "res://src/capabilities/attacks/RangedAttack.gd"
+}, {
+"base": "Capability",
+"class": "ReactOnAttackCapability",
+"language": "GDScript",
+"path": "res://src/capabilities/ReactOnAttack.gd"
+}, {
+"base": "HBoxContainer",
+"class": "RequirementRow",
+"language": "GDScript",
+"path": "res://src/ui/RequirementRow.gd"
+}, {
+"base": "PanelContainer",
+"class": "ResourceIndicator",
+"language": "GDScript",
+"path": "res://src/ui/ResourceIndicator.gd"
+}, {
+"base": "Object",
+"class": "ResourceRequirement",
+"language": "GDScript",
+"path": "res://src/ResourceRequirement.gd"
+}, {
+"base": "Projectile",
+"class": "RockProjectile",
+"language": "GDScript",
+"path": "res://src/entities/RockProjectile.gd"
 }, {
 "base": "Object",
 "class": "Selection",
@@ -110,9 +180,24 @@ _global_script_classes=[ {
 "path": "res://src/capabilities/TakeDamage.gd"
 }, {
 "base": "Object",
+"class": "TeamResources",
+"language": "GDScript",
+"path": "res://src/TeamResources.gd"
+}, {
+"base": "PanelContainer",
+"class": "TopBar",
+"language": "GDScript",
+"path": "res://src/ui/TopBar.gd"
+}, {
+"base": "Object",
 "class": "UnitFactory",
 "language": "GDScript",
 "path": "res://src/factories/UnitFactory.gd"
+}, {
+"base": "Object",
+"class": "UnitHouseCapacities",
+"language": "GDScript",
+"path": "res://src/constants/entities/UnitHouseCapacities.gd"
 } ]
 _global_script_class_icons={
 "ActionButton": "",
@@ -125,17 +210,34 @@ _global_script_class_icons={
 "Cave": "",
 "Clubman": "",
 "Entity": "",
+"GameManager": "",
 "GenerateBreadCapability": "",
+"HealthBar": "",
+"IconResources": "",
 "Monument": "",
 "MoveCapability": "",
+"PeriodicBaseCapability": "",
+"ProduceClubmanCabability": "",
+"ProduceStoneMasterCapability": "",
 "ProduceUnitCapability": "",
 "ProgressBaseCapability": "",
 "ProgressInfo": "",
+"Projectile": "",
+"ProjectileCapability": "",
+"RangedAttackCapability": "",
+"ReactOnAttackCapability": "",
+"RequirementRow": "",
+"ResourceIndicator": "",
+"ResourceRequirement": "",
+"RockProjectile": "",
 "Selection": "",
 "Shaman": "",
 "StoneMaster": "",
 "TakeDamageCapability": "",
-"UnitFactory": ""
+"TeamResources": "",
+"TopBar": "",
+"UnitFactory": "",
+"UnitHouseCapacities": ""
 }
 
 [application]
@@ -146,11 +248,17 @@ config/icon="res://icon.png"
 
 [display]
 
-window/size/resizable=false
+window/size/fullscreen=true
+window/stretch/mode="viewport"
+window/stretch/aspect="keep_height"
 
 [gui]
 
 timers/tooltip_delay_sec=0.2
+
+[layer_names]
+
+2d_render/layer_5="projectiles"
 
 [rendering]
 

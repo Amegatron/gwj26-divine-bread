@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/ranged_attack.wav-e38298434479459ca3ccfe913111194b.sample"
+
+[deps]
+
+source_file="res://sounds/ranged_attack.wav"
+dest_files=[ "res://.import/ranged_attack.wav-e38298434479459ca3ccfe913111194b.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

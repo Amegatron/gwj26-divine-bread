@@ -1,17 +1,21 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://src/entities/Clubman.gd" type="Script" id=1]
 [ext_resource path="res://images/arm_with_club.png" type="Texture" id=2]
 [ext_resource path="res://images/caveman_body.png" type="Texture" id=3]
 [ext_resource path="res://images/cavemane_head.png" type="Texture" id=4]
 [ext_resource path="res://shanders/SelectionCircle.tres" type="Material" id=5]
+[ext_resource path="res://scenes/ui/HealthBar.tscn" type="PackedScene" id=6]
+[ext_resource path="res://sounds/unit_produced_v1.wav" type="AudioStream" id=7]
+[ext_resource path="res://sounds/confirm.wav" type="AudioStream" id=8]
+[ext_resource path="res://sounds/attack.wav" type="AudioStream" id=9]
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 6.5423
 height = 12.8999
 
 [sub_resource type="Animation" id=2]
-length = 0.8
+length = 0.9
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprites/Arm:position")
 tracks/0/interp = 1
@@ -19,7 +23,7 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.4, 0.5, 0.7, 0.8 ),
+"times": PoolRealArray( 0, 0.4, 0.5, 0.7, 0.9 ),
 "transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
 "update": 0,
 "values": [ Vector2( 1, -12 ), Vector2( -4, -16 ), Vector2( -4, -12 ), Vector2( 1, -12 ), Vector2( 1, -12 ) ]
@@ -31,7 +35,7 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.4, 0.5, 0.7, 0.8 ),
+"times": PoolRealArray( 0, 0.4, 0.5, 0.7, 0.9 ),
 "transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
 "update": 0,
 "values": [ 0.0, 72.5235, 0.0, 0.0, 0.0 ]
@@ -183,3 +187,24 @@ visible = false
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SelectionArea"]
 position = Vector2( 0.000115633, -16.2941 )
 shape = SubResource( 7 )
+
+[node name="HealthBar" parent="." instance=ExtResource( 6 )]
+visible = false
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -10.0
+margin_top = 2.0
+margin_right = 9.99996
+margin_bottom = 5.0
+rect_min_size = Vector2( 20, 3 )
+
+[node name="ProducedSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 7 )
+
+[node name="ConfirmSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 8 )
+
+[node name="AttackSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 9 )
