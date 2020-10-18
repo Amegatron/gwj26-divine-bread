@@ -76,6 +76,10 @@ func perform(args, internal = false):
 	
 func cancel():
 	self.isPraying = false
+	currentTarget = null
+	var moveCap = ownerEntity.get_capability("Move")
+	if moveCap:
+		moveCap.stuckAccumulator = 0.0
 
 func process(delta):
 	if ownerEntity.currentAction != self:
@@ -88,6 +92,10 @@ func process(delta):
 			return
 
 	var moveCap = ownerEntity.get_capability("Move")
+	
+	if moveCap.stuckAccumulator >= 1:
+		moveCap.cancel()
+		cancel()
 	
 	if !isInsidePrayArea:
 		if typeof(moveCap.currentTarget) != typeof(currentTarget) || moveCap.currentTarget != currentTarget:

@@ -227,9 +227,7 @@ func _on_capability_removed(capabilityName):
 	if actionsInfo:
 		actionsInfo.remove_capability(capabilityName)
 
-	if actionsInfo.capabilities.size() > 0:
-		infoBaloon.visible = true
-	else:
+	if actionsInfo.capabilities.size() == 0:
 		infoBaloon.visible = false
 
 func emit_capability_signal(capability, signalName, args):

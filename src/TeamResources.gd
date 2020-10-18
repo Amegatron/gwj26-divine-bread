@@ -7,6 +7,7 @@ var breadForce : int = 0 setget _set_breadforce
 var houseCapacityMax : int = 10 setget _set_housecapacity_max
 var houseCapacity : int = 0 setget _set_housecapacity
 var monumentLevel : int = 1 setget _set_monument_level
+var houseUpgrades : int = 0 setget _set_house_upgrades
 
 signal resource_changed(type, oldValue, newValue)
 
@@ -14,6 +15,7 @@ const TYPE_BREADFORCE = "breadforce"
 const TYPE_HOUSE_CAPACITY = "houseCapacity"
 const TYPE_HOUSE_CAPACITY_MAX = "houseCapacityMax"
 const TYPE_MONUMENT_LEVEL = "monumentLevel"
+const TYPE_HOUSE_UPGRADES = "houseUpgrades"
 
 func _init(team):
 	self.team = team
@@ -44,6 +46,12 @@ func _set_monument_level(value):
 	monumentLevel = value
 	if oldValue != value:
 		emit_signal("resource_changed", TYPE_MONUMENT_LEVEL, oldValue, value)
+		
+func _set_house_upgrades(value):
+	var oldValue = houseUpgrades
+	houseUpgrades = value
+	if oldValue != value:
+		emit_signal("resource_changed", TYPE_HOUSE_UPGRADES, oldValue, value)
 
 func get_resource_by_type(type):
 	match type:
@@ -55,6 +63,8 @@ func get_resource_by_type(type):
 			return houseCapacityMax
 		TYPE_MONUMENT_LEVEL:
 			return monumentLevel
+		TYPE_HOUSE_UPGRADES:
+			return houseUpgrades
 	
 	return 0
 
@@ -68,4 +78,8 @@ func set_resource_by_type(type, value):
 			self.houseCapacityMax = value
 		TYPE_MONUMENT_LEVEL:
 			self.monumentLevel = value
-		
+		TYPE_HOUSE_UPGRADES:
+			self.houseUpgrades = value
+
+func increment_resource_by_type(type, amount = 1):
+	set_resource_by_type(type, get_resource_by_type(type) + amount)

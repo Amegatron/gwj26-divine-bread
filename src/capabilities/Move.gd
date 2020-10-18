@@ -5,7 +5,11 @@ class_name MoveCapability
 var speed = 100
 
 var currentTarget
-var distanceApproximation = 30
+var distanceApproximation = 5
+
+var stuckAccumulator = 0.0
+var stuckWait = 0.0
+var stuckTimeout = 1
 
 const CAPABILITY_NAME = "Move"
 
@@ -16,6 +20,9 @@ func _init():
 	isTargeted = true
 
 func perform(args, internal = false):	
+	stuckAccumulator = 0.0
+	stuckWait = 0.0
+	
 	if !internal && ownerEntity.has_node("ConfirmSound") && ownerEntity.team == Entity.TEAM_PLAYER:
 		if !ownerEntity.get_node("ConfirmSound").playing:
 			ownerEntity.get_node("ConfirmSound").play()
@@ -42,6 +49,11 @@ func need_to_move(target):
 # to a random close position, and the continue main move
 func process(delta):
 	if currentTarget:
+		
+		stuckWait -= delta
+		if stuckWait > 0:
+			return
+			
 		var targetPosition
 		if currentTarget is Vector2:
 			targetPosition = currentTarget
@@ -52,7 +64,7 @@ func process(delta):
 		if targetPosition.distance_to(ownerEntity.position) > distanceApproximation:
 			var oldPos = ownerEntity.position
 			var dir = targetPosition - ownerEntity.position
-			ownerEntity.move_and_slide(dir.normalized() * speed)
+			ownerEntity.move_and_slide(dir.normalized() * speed, Vector2(0, 0), false, 2)
 			for i in range(ownerEntity.get_slide_count()):
 				var coll = ownerEntity.get_slide_collision(i)
 				var target = (coll as KinematicCollision2D).collider
@@ -60,14 +72,27 @@ func process(delta):
 					if currentTarget is Entity && target == currentTarget:
 						currentTarget = null
 					if target.type == Entity.TYPE_UNIT:
-						target.move_and_slide(coll.normal * -1 * speed / 4)
+						target.move_and_slide(coll.normal * -1 * speed / 4, Vector2(0, 0), false, 1)
 					
-			var diff = ownerEntity.position.x - oldPos.x
-			if diff > 0:
-				ownerEntity.set_look_direction(Entity.LOOK_RIGHT)
-			elif diff < 0:
-				ownerEntity.set_look_direction(Entity.LOOK_LEFT)
-				
+			var diffX = ownerEntity.position.x - oldPos.x
+			var diff = oldPos.distance_to(targetPosition) - ownerEntity.position.distance_to(targetPosition)
+			var threshold = speed * delta * 0.2
+			if ownerEntity.isSelected:
+				pass
+			if diff > threshold:
+				stuckAccumulator -= diff * 0.5 / (speed * delta)
+				if stuckAccumulator < 0:
+					stuckAccumulator = 0
+					
+				if diffX > 0.2:
+					ownerEntity.set_look_direction(Entity.LOOK_RIGHT)
+				elif diffX < -0.2:
+					ownerEntity.set_look_direction(Entity.LOOK_LEFT)
+			else:
+				if ownerEntity.isSelected:
+					pass
+				stuckAccumulator += 0.15
+							
 			if ownerEntity.animationPlayer.current_animation != "Walk":
 				ownerEntity.animationPlayer.play("Walk")
 				
@@ -77,9 +102,16 @@ func process(delta):
 			
 	if !currentTarget:
 		cancel()
+		
+	if stuckAccumulator >= 1:
+		stuckWait = stuckTimeout
+		stuckAccumulator = 0
+		if ownerEntity.animationPlayer.current_animation == "Walk":
+			ownerEntity.animationPlayer.stop(true)
 
 func cancel():
 	currentTarget = null
+	# stuckAccumulator = 0.0
 	if ownerEntity.currentAction == self:
 		ownerEntity.currentAction = null
 		

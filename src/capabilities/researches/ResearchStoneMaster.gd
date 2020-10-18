@@ -22,6 +22,7 @@ func progress_finished():
 	for ent in entities:
 		if ent is Cave && ent.team == ownerEntity.team:
 			var cap = ProduceStoneMasterCapability.new()
+			cap.affectedByBonuses = ["HouseUpgradesBonus"]
 			ent.add_capability(cap)
 			break
 			

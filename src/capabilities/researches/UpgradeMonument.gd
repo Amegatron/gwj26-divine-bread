@@ -21,7 +21,7 @@ func _update_parameters():
 	self.requirements = _get_requirements_for_next_level(currentLevel)
 	
 func _get_time_needed_for_next_level(currentLevel):
-	var time = currentLevel * 10 + (currentLevel - 1) * 20
+	var time = currentLevel * 100 + (currentLevel - 1) * 20
 	return time
 
 func _get_requirements_for_next_level(currentLevel):
@@ -38,5 +38,5 @@ func progress_finished():
 	var sound = OneTimeSound.new()
 	sound.play(SoundResources.SOUND_EVENT, ownerEntity)
 	var res = manager.get_team_resource(ownerEntity.team)
-	res.set_resource_by_type(TeamResources.TYPE_MONUMENT_LEVEL, res.get_resource_by_type(TeamResources.TYPE_MONUMENT_LEVEL) + 1)
+	res.increment_resource_by_type(TeamResources.TYPE_MONUMENT_LEVEL)
 	_update_parameters()

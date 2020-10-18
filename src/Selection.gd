@@ -40,10 +40,11 @@ func continueSelection(pos):
 			
 		selectionRect.rect_position = newPos
 			
-func endSelection(pos):
-	for entity in selectedEntities:
-		if entity:
-			entity.isSelected = false
+func endSelection(pos, append = false):
+	if !append:
+		for entity in selectedEntities:
+			if entity:
+				entity.isSelected = false
 		
 	var oldSelectedEntities = selectedEntities
 	
@@ -69,20 +70,50 @@ func endSelection(pos):
 					Entity.TYPE_BUILDING:
 						tmpSelection["buildings"].append(obj)
 						
+	var deselect = true
+	for tmp in tmpSelection["units"]:
+		if !tmp.isSelected:
+			deselect = false
+			break
+
 	if tmpSelection["units"].size() > 0:
-		selectedEntities = tmpSelection["units"]
+		if selectedEntities.size() > 0 && selectedEntities[0].type == Entity.TYPE_UNIT && append:
+			if deselect:
+				for tmp in tmpSelection["units"]:
+					if tmp.isSelected:
+						tmp.isSelected = false
+						selectedEntities.remove(selectedEntities.find(tmp))
+					else:
+						selectedEntities.append(tmp)
+			else:
+				for tmp in tmpSelection["units"]:
+					if !tmp.isSelected:
+						selectedEntities.append(tmp)
+		elif !append || oldSelectedEntities.size() == 0:
+			selectedEntities = tmpSelection["units"]
+			
 	elif tmpSelection["buildings"].size() > 0:
-		selectedEntities = [tmpSelection["buildings"][0]]
-	else:
+		if !append || oldSelectedEntities.size() == 0:
+			selectedEntities = [tmpSelection["buildings"][0]]
+	elif !append:
 		selectedEntities = []
+
+	emit_signal("new_selection", selectedEntities, oldSelectedEntities)
+	
+	for entity in oldSelectedEntities:
+		if entity:
+			entity.isSelected = false
 	
 	for entity in selectedEntities:
 		entity.isSelected = true
 	
 	selectionRect.queue_free()
 	selectionStartPos = Vector2(0, 0)
-	
-	emit_signal("new_selection", selectedEntities, oldSelectedEntities)
+
+func remove_from_selection(entity):
+	var pos = selectedEntities.find(entity)
+	if pos >= 0:
+		selectedEntities.remove(pos)
 
 func send_action_to_entities(action, args):
 	for entity in selectedEntities:

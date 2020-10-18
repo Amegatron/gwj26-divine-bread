@@ -26,12 +26,6 @@ func _set_prayers(value):
 func _on_capability_signal(capability, signalName, args):
 	match signalName:
 		"new_prayer":
-			currentPrayers += 1
-			print("New prayer!", currentPrayers)
+			self.currentPrayers += 1
 		"prayer_left":
-			currentPrayers -= 1
-			print("Prayer left! ", currentPrayers)
-
-func get_prayer_bonus():
-	var affectivePrayers = min(maxPrayers, currentPrayers)
-	return 1.0 + affectivePrayers * prayerBonus
+			self.currentPrayers -= 1

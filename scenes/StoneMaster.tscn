@@ -230,6 +230,8 @@ shape = SubResource( 7 )
 
 [node name="SelectionArea" type="Area2D" parent="."]
 visible = false
+monitoring = false
+monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SelectionArea"]
 position = Vector2( 0.000115633, -16.2941 )

@@ -8,6 +8,8 @@ var currentTarget
 var targetPosition
 var wanderingTargetedAttack = false
 var actualTarget
+var stuckAccumulator = 0.0
+var stuckTimeout = 1
 
 func _init():
 	capabilityName = "Attack"
@@ -39,6 +41,10 @@ func process(delta):
 	if ownerEntity.currentAction && ownerEntity.currentAction != self:
 		return
 			
+	stuckAccumulator -= delta
+	if stuckAccumulator > 0:
+		return
+		
 	if currentTarget is Entity && currentTarget.isDead:
 		currentTarget = null
 		if ownerEntity.currentAction == self:
@@ -60,8 +66,15 @@ func process(delta):
 		temporaryTarget = closestEnemy
 
 	var moveCap = ownerEntity.get_capability("Move")
+	if moveCap.stuckAccumulator >= 1:
+		moveCap.cancel()
+		stuckAccumulator = stuckTimeout
+		return
 	
 	var finalTarget = temporaryTarget if temporaryTarget else currentTarget
+		
+	if ownerEntity.isSelected:
+		pass
 		
 	actualTarget = null
 	if finalTarget:
@@ -101,6 +114,9 @@ func perform_actual_attack(target):
 
 func cancel():
 	currentTarget = null
+	var moveCap = ownerEntity.get_capability("Move")
+	if moveCap:
+		moveCap.stuckAccumulator = 0.0
 	if ownerEntity.currentAction == self:
 		ownerEntity.currentAction = null
 		

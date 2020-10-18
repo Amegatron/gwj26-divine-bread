@@ -23,16 +23,16 @@ func _ready():
 	
 	_init_entities()
 		
-	for i in range(2):
+	for i in range(25):
 		unit = UnitFactory.createClubman(Entity.TEAM_PLAYER)
-		unit.position = Vector2(500 + randi() % 50, 250 + i*50)
+		unit.position = Vector2(500 + randi()%200, 350 + randi()%100)
 		add_entity(unit)
 		
-	for i in range(8):
+	for i in range(25):
 		unit = UnitFactory.createClubman(Entity.TEAM_ENEMY)
-		unit.position = Vector2(1200 + randi() % 50, 250 + i*40)
+		unit.position = Vector2(1200 + randi() % 200, 350 + randi()%100)
 		add_entity(unit)
-#		unit.perform_action("Attack", {"target": $MapContainer/Entities/Monument, "wandering": true})
+		unit.perform_action("Attack", {"target": $MapContainer/Entities/Monument, "wandering": true})
 	
 	currentSelection = Selection.new()
 	currentSelection.level = self
@@ -43,34 +43,39 @@ func _init_entities():
 			ent.level = self
 
 	var cap = ProduceClubmanCabability.new()
-#	cap.timeNeeded = 10
+	var cave = $MapContainer/Entities/Cave
+	cap.affectedByBonuses = ["HouseUpgradesBonus"]
 	cap.hotkey = KEY_C
-	$MapContainer/Entities/Cave.add_capability(cap)
+	cave.add_capability(cap)
+	
+	cap = HouseUpgradesBonusCapability.new()
+	cave.add_capability(cap)
 
 	cap = UpgradeHouseCapability.new()
-#	cap.timeNeeded = 30
 	cap.hotkey = KEY_U
-	$MapContainer/Entities/Cave.add_capability(cap)
-	
-#	cap = ProduceStoneMasterCapability.new()
-#	cap.timeNeeded = 10
-#	cap.hotkey = KEY_S
-#	$MapContainer/Entities/Cave.add_capability(cap)
-	
+	cave.add_capability(cap)
+		
+	var monument = $MapContainer/Entities/Monument
 	cap = GenerateBreadCapability.new()
-	$MapContainer/Entities/Monument.add_capability(cap)
+	cap.affectedByBonuses = ["PrayableBonus"]
+	monument.add_capability(cap)
 	
 	cap = TakeDamageCapability.new()
-	$MapContainer/Entities/Monument.add_capability(cap)
+	monument.add_capability(cap)
 	
 	cap = ResearchStoneMasterCapability.new()
-	$MapContainer/Entities/Monument.add_capability(cap)
+	cap.affectedByBonuses = ["PrayableBonus"]
+	monument.add_capability(cap)
 	
 	cap = PrayableCapability.new()
-	$MapContainer/Entities/Monument.add_capability(cap)
+	monument.add_capability(cap)
 	
 	cap = UpgradeMonumentCapability.new()
-	$MapContainer/Entities/Monument.add_capability(cap)
+	cap.affectedByBonuses = ["PrayableBonus"]
+	monument.add_capability(cap)
+	
+	cap = PrayableBonusCapability.new()
+	monument.add_capability(cap)
 
 func get_capability_by_hotkey_in_selection(scancode):
 	if currentSelection.selectedEntities.size() > 0:
@@ -123,8 +128,9 @@ func _input(event):
 				currentSelection.send_action_to_entities(currentHandAction, {"target": target})
 				currentHandAction = null		
 		elif currentSelection.selectionStartPos:
+			var append = event.shift
 			if currentSelection.selectionStartPos:
-				currentSelection.endSelection(globalEventPos)
+				currentSelection.endSelection(globalEventPos, append)
 			
 		if event.button_mask & BUTTON_RIGHT:
 			if event.is_pressed():
@@ -165,4 +171,8 @@ func add_entity(entity):
 		emit_signal("entity_added", entity)
 
 func _on_entity_died(entity):
+	if entity.isSelected:
+		entity.isSelected = false
+		currentSelection.remove_from_selection(entity)
+		
 	emit_signal("entity_died", entity)

@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://src/entities/Monument.gd" type="Script" id=1]
 [ext_resource path="res://images/pedestal_with_bread.png" type="Texture" id=2]
 [ext_resource path="res://shanders/aura.shader" type="Shader" id=3]
 [ext_resource path="res://scenes/ui/HealthBar.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scenes/ui/PrayersInfo.tscn" type="PackedScene" id=5]
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 3 )
@@ -27,6 +28,7 @@ material = SubResource( 1 )
 texture = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+visible = false
 polygon = PoolVector2Array( 150.214, -58.4798, 205.486, 15.6698, -59.4793, 184.527, -180.282, 168.509, -218.993, 65.0589, -61.2143, -57.5359 )
 
 [node name="BonusArea" type="Area2D" parent="."]
@@ -58,8 +60,20 @@ margin_bottom = 207.0
 rect_min_size = Vector2( 200, 10 )
 
 [node name="PrayArea" type="Area2D" parent="."]
+visible = false
 collision_layer = 4
 collision_mask = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PrayArea"]
 shape = SubResource( 4 )
+
+[node name="PrayersInfo" parent="." instance=ExtResource( 5 )]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -28.0
+margin_top = -23.0
+margin_right = 28.0
+margin_bottom = 23.0
