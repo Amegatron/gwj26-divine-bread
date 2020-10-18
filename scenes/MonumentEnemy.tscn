@@ -1,62 +1,57 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://src/entities/Monument.gd" type="Script" id=1]
-[ext_resource path="res://images/pedestal_with_bread.png" type="Texture" id=2]
+[ext_resource path="res://images/pedestal_with_potato.png" type="Texture" id=2]
 [ext_resource path="res://shanders/aura.shader" type="Shader" id=3]
 [ext_resource path="res://scenes/ui/HealthBar.tscn" type="PackedScene" id=4]
 [ext_resource path="res://scenes/ui/PrayersInfo.tscn" type="PackedScene" id=5]
 
-[sub_resource type="ShaderMaterial" id=1]
+[sub_resource type="ShaderMaterial" id=4]
 shader = ExtResource( 3 )
 shader_param/aura_width = 2.0
 shader_param/aura_color = Color( 0, 0, 0, 1 )
 
-[sub_resource type="CircleShape2D" id=2]
+[sub_resource type="CircleShape2D" id=5]
 radius = 340.846
 
-[sub_resource type="CircleShape2D" id=3]
-radius = 199.522
-
-[sub_resource type="CircleShape2D" id=4]
+[sub_resource type="CircleShape2D" id=6]
 radius = 260.0
 
 [node name="Monument" type="KinematicBody2D"]
 script = ExtResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
-material = SubResource( 1 )
+material = SubResource( 4 )
 texture = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
 visible = false
-polygon = PoolVector2Array( 150.214, -58.4798, 205.486, 15.6698, -59.4793, 184.527, -180.282, 168.509, -218.993, 65.0589, -61.2143, -57.5359 )
+polygon = PoolVector2Array( -84.3938, -25.9946, -7.05298, -21.7567, 0.363281, -130.881, 37.4445, -201.865, 116.904, -201.865, 149.748, -164.784, 218.613, 114.914, 153.985, 207.087, -209.411, 190.136, -188.221, 92.6653, -125.713, 34.3949, -111.94, -13.281 )
 
 [node name="BonusArea" type="Area2D" parent="."]
 visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BonusArea"]
-shape = SubResource( 2 )
+shape = SubResource( 5 )
 
 [node name="SelectionArea" type="Area2D" parent="."]
 visible = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SelectionArea"]
-visible = false
-shape = SubResource( 3 )
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="SelectionArea"]
+polygon = PoolVector2Array( -209.411, 173.185, -176.567, 79.9518, -122.534, 39.6922, -106.643, -16.4594, -65.3235, -28.1135, -10.2314, -20.6972, -0.696228, -122.406, 32.1472, -197.628, 96.7745, -207.163, 149.748, -169.022, 218.613, 118.092, 144.45, 209.206 )
 
 [node name="BaloonPosition" type="Position2D" parent="."]
-position = Vector2( 140.638, -151.02 )
+position = Vector2( -71.2547, 0.483292 )
 
 [node name="HealthBar" parent="." instance=ExtResource( 4 )]
-visible = false
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 margin_left = -100.0
-margin_top = 197.0
+margin_top = 109.0
 margin_right = 100.0
-margin_bottom = 207.0
+margin_bottom = 119.0
 rect_min_size = Vector2( 200, 10 )
 
 [node name="PrayArea" type="Area2D" parent="."]
@@ -64,7 +59,8 @@ collision_layer = 4
 collision_mask = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PrayArea"]
-shape = SubResource( 4 )
+position = Vector2( -25, 117 )
+shape = SubResource( 6 )
 
 [node name="PrayersInfo" parent="." instance=ExtResource( 5 )]
 visible = false

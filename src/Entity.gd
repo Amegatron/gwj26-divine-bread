@@ -3,14 +3,14 @@ extends KinematicBody2D
 class_name Entity
 
 # TODO: move some parameters (health, etc) to separate Capabilities
-var maxHealth
+export var maxHealth : int
 var health : int setget _set_health
 var armor : int
 var capabilities = {}
 var currentAction setget _set_current_action
 var type
 var isSelectable = true
-var team : int
+export var team : int
 var isSelected setget _set_is_selected
 var isDead = false setget _set_is_dead
 var houseCapacityCost setget , _get_house_cost
@@ -67,6 +67,9 @@ func _ready():
 func _process(delta):
 	z_index = position.y
 
+	if isSelected:
+		pass
+		
 	for cap in capabilities.values():
 		if !isDead || cap.activeOnDeadEntity:
 			cap.process(delta)
@@ -105,7 +108,6 @@ func perform_action(actionName, args, internal = false):
 		if level.gameManager.are_requirements_met(cap.requirements, team):
 			# TODO: check that all caps return true or false
 			var result = cap.perform(args, internal)
-				
 			if result:
 				level.gameManager.consume_requirements(cap.requirements, team)
 				emit_signal("action_performed", cap, args, result)

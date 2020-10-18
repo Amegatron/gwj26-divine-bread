@@ -7,7 +7,14 @@ onready var canvasLayer = $CanvasLayer
 onready var gameManager = $GameManager
 onready var camera = $Camera2D
 
+var ai
+
 var currentHandAction
+
+var leftBorder = 0
+var rightBorder = 2400
+var upperBorder = 200
+var lowerBorder = 600
 
 signal entity_added(entity)
 signal entity_died(entity)
@@ -20,43 +27,60 @@ func _ready():
 	gameManager.add_team(Entity.TEAM_ENEMY)
 	
 	gameManager.get_team_resource(Entity.TEAM_PLAYER).set_resource_by_type(TeamResources.TYPE_BREADFORCE, 10)
-	
+	gameManager.get_team_resource(Entity.TEAM_ENEMY).set_resource_by_type(TeamResources.TYPE_BREADFORCE, 10)
+		
 	_init_entities()
+	
+	ai = AI.new()
+	ai.gameManager = gameManager
+	ai.cave = $MapContainer/Entities/EnemyCave
+	ai.monument = $MapContainer/Entities/MonumentEnemy
+	ai.enemyMonument = $MapContainer/Entities/Monument
+	ai.level = self
+	ai.team = Entity.TEAM_ENEMY
+	ai.mapPosition = AI.MAP_POSITION_RIGHT
+	ai.alarmZone = $MapContainer/EnemyAlarmZone
+	add_child(ai)
 		
-	for _i in range(25):
+	for i in range(4):
 		unit = UnitFactory.createClubman(Entity.TEAM_PLAYER)
-		unit.position = Vector2(700 + randi()%200, 350 + randi()%100)
+		unit.position = Vector2(500, 350 + i * 30)
 		add_entity(unit)
-		unit.perform_action("Attack", {"target": Vector2(1800, 400)})
 		
-	for _i in range(15):
-		unit = UnitFactory.createStoneMaster(Entity.TEAM_PLAYER)
-		unit.position = Vector2(400 + randi()%200, 350 + randi()%100)
-		add_entity(unit)	
-		unit.perform_action("Attack", {"target": Vector2(1800, 400)})
-		
-	for _i in range(25):
+	for i in range(4):
 		unit = UnitFactory.createClubman(Entity.TEAM_ENEMY)
-		unit.position = Vector2(1500 + randi() % 200, 350 + randi()%100)
+		unit.position = Vector2(1900, 350 + i * 30)
 		add_entity(unit)
-		unit.perform_action("Attack", {"target": $MapContainer/Entities/Monument, "wandering": true})
-
-	for _i in range(15):
-		unit = UnitFactory.createStoneMaster(Entity.TEAM_ENEMY)
-		unit.position = Vector2(1800 + randi() % 200, 350 + randi()%100)
-		add_entity(unit)
-		unit.perform_action("Attack", {"target": $MapContainer/Entities/Monument, "wandering": true})
 	
 	currentSelection = Selection.new()
 	currentSelection.level = self
+	
+	ai.start()
 
 func _init_entities():
 	for ent in entities.get_children():
 		if ent is Entity:
 			ent.level = self
 
+	var cave = $MapContainer/Entities/PlayerCave
+	cave.team = Entity.TEAM_PLAYER
+	_init_cave(cave)
+		
+	cave = $MapContainer/Entities/EnemyCave
+	cave.team = Entity.TEAM_ENEMY
+	_init_cave(cave)
+	
+	var monument = $MapContainer/Entities/Monument
+	monument.team = Entity.TEAM_PLAYER
+	monument.defaultTargetAction = "Pray"
+	_init_monument(monument)
+
+	monument = $MapContainer/Entities/MonumentEnemy
+	monument.team = Entity.TEAM_ENEMY
+	_init_monument(monument)
+
+func _init_cave(cave):
 	var cap = ProduceClubmanCabability.new()
-	var cave = $MapContainer/Entities/Cave
 	cap.affectedByBonuses = ["HouseUpgradesBonus"]
 	cap.hotkey = KEY_C
 	cave.add_capability(cap)
@@ -67,9 +91,9 @@ func _init_entities():
 	cap = UpgradeHouseCapability.new()
 	cap.hotkey = KEY_U
 	cave.add_capability(cap)
-		
-	var monument = $MapContainer/Entities/Monument
-	cap = GenerateBreadCapability.new()
+
+func _init_monument(monument):
+	var cap = GenerateBreadCapability.new()
 	cap.affectedByBonuses = ["PrayableBonus"]
 	monument.add_capability(cap)
 	
@@ -88,7 +112,7 @@ func _init_entities():
 	monument.add_capability(cap)
 	
 	cap = PrayableBonusCapability.new()
-	monument.add_capability(cap)
+	monument.add_capability(cap)	
 
 func get_capability_by_hotkey_in_selection(scancode):
 	if currentSelection.selectedEntities.size() > 0:
@@ -103,6 +127,9 @@ func get_capability_by_hotkey_in_selection(scancode):
 	
 func _input(event):		
 	if event is InputEventKey:
+		if event.scancode == KEY_F && event.is_pressed():
+			OS.window_fullscreen = !OS.window_fullscreen
+		
 		if event.scancode == KEY_ESCAPE && currentHandAction:
 			currentHandAction = null
 		else:
@@ -120,6 +147,12 @@ func _input(event):
 						ent.get_node("HealthBar").visible = true
 					elif !ent.isSelected:
 						ent.get_node("HealthBar").visible = false
+						
+		if event.is_pressed():
+			if event.scancode == KEY_F1 || event.scancode == KEY_HOME:
+				camera.position = Vector2(leftBorder, 0)
+			elif event.scancode == KEY_F4 || event.scancode == KEY_END:
+				camera.position = Vector2(rightBorder - get_viewport().size.x, 0)
 			
 	var proximity = max(0, (currentSelection.selectedEntities.size() - 1) * 10)
 	if event is InputEventMouse:
@@ -169,11 +202,12 @@ func get_entity_at_position(pos):
 	for obj in ents:
 		if obj is Entity and obj.has_node("SelectionArea"):
 			var area = obj.get_node("SelectionArea")
-			var shape = area.shape_owner_get_shape(0, 0)
-			var shapeTransform = area.shape_owner_get_transform(0) * area.global_transform
-			
-			if shape.collide(shapeTransform, ourShape, ourTransform):
-				return obj
+			for shapeIndex in range(area.shape_owner_get_shape_count(0)):
+				var shape = area.shape_owner_get_shape(0, shapeIndex)
+				var shapeTransform = area.shape_owner_get_transform(0) * area.global_transform
+				
+				if shape.collide(shapeTransform, ourShape, ourTransform):
+					return obj
 				
 	return null
 

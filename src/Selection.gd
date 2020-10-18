@@ -54,50 +54,75 @@ func endSelection(pos, append = false):
 	var ourTransform = Transform2D(0, level.get_viewport_transform().xform_inv(selectionRect.rect_position) + ourShape.extents)
 
 	var tmpSelection = {
-		"units": [],
-		"buildings": [],
+		Entity.TEAM_PLAYER: {
+			"units": [],
+			"buildings": []
+		},
+		Entity.TEAM_ENEMY: {
+			"units": [],
+			"buildings": []			
+		}
 	}
 	
+	var playerTeamSelected = false
+	var enemyTeamSelected = false
 	for obj in entities:
 		if obj is Entity && obj.has_node("SelectionArea"):
 			var area = obj.get_node("SelectionArea")
-			var shape = area.shape_owner_get_shape(0, 0)
-			var shapeTransform = area.shape_owner_get_transform(0) * area.global_transform
-			if ourShape.collide(ourTransform, shape, shapeTransform) && obj.team == Entity.TEAM_PLAYER:
+			var objectCollides = false
+			for shapeIndex in range(area.shape_owner_get_shape_count(0)):
+				var shape = area.shape_owner_get_shape(0, shapeIndex)
+				var shapeTransform = area.shape_owner_get_transform(0) * area.global_transform
+				if ourShape.collide(ourTransform, shape, shapeTransform):
+					objectCollides = true
+					break
+					
+			if objectCollides:
+				if obj.team == Entity.TEAM_PLAYER:
+					playerTeamSelected = true
+				elif obj.team == Entity.TEAM_ENEMY:
+					enemyTeamSelected = true
+					
 				match obj.type:
 					Entity.TYPE_UNIT:
-						tmpSelection["units"].append(obj)
+						tmpSelection[obj.team]["units"].append(obj)
 					Entity.TYPE_BUILDING:
-						tmpSelection["buildings"].append(obj)
+						tmpSelection[obj.team]["buildings"].append(obj)
 						
 	var deselect = true
-	for tmp in tmpSelection["units"]:
+	for tmp in tmpSelection[Entity.TEAM_PLAYER]["units"]:
 		if !tmp.isSelected:
 			deselect = false
 			break
 
-	if tmpSelection["units"].size() > 0:
-		if selectedEntities.size() > 0 && selectedEntities[0].type == Entity.TYPE_UNIT && append:
-			if deselect:
-				for tmp in tmpSelection["units"]:
-					if tmp.isSelected:
-						tmp.isSelected = false
-						selectedEntities.remove(selectedEntities.find(tmp))
-					else:
-						selectedEntities.append(tmp)
-			else:
-				for tmp in tmpSelection["units"]:
-					if !tmp.isSelected:
-						selectedEntities.append(tmp)
-		elif !append || oldSelectedEntities.size() == 0:
-			selectedEntities = tmpSelection["units"]
+	if playerTeamSelected || !enemyTeamSelected:
+		if tmpSelection[Entity.TEAM_PLAYER]["units"].size() > 0:
+			if selectedEntities.size() > 0 && selectedEntities[0].type == Entity.TYPE_UNIT && append:
+				if deselect:
+					for tmp in tmpSelection[Entity.TEAM_PLAYER]["units"]:
+						if tmp.isSelected:
+							tmp.isSelected = false
+							selectedEntities.remove(selectedEntities.find(tmp))
+						else:
+							selectedEntities.append(tmp)
+				else:
+					for tmp in tmpSelection[Entity.TEAM_PLAYER]["units"]:
+						if !tmp.isSelected:
+							selectedEntities.append(tmp)
+			elif !append || oldSelectedEntities.size() == 0:
+				selectedEntities = tmpSelection[Entity.TEAM_PLAYER]["units"]
+				
+		elif tmpSelection[Entity.TEAM_PLAYER]["buildings"].size() > 0:
+			if !append || oldSelectedEntities.size() == 0:
+				selectedEntities = [tmpSelection[Entity.TEAM_PLAYER]["buildings"][0]]
+		elif !append:
+			selectedEntities = []
+	elif enemyTeamSelected:
+		if tmpSelection[Entity.TEAM_ENEMY]["units"].size() > 0:
+			selectedEntities = [tmpSelection[Entity.TEAM_ENEMY]["units"][0]]
+		elif tmpSelection[Entity.TEAM_ENEMY]["buildings"].size() > 0:
+			selectedEntities = [tmpSelection[Entity.TEAM_ENEMY]["buildings"][0]]
 			
-	elif tmpSelection["buildings"].size() > 0:
-		if !append || oldSelectedEntities.size() == 0:
-			selectedEntities = [tmpSelection["buildings"][0]]
-	elif !append:
-		selectedEntities = []
-
 	emit_signal("new_selection", selectedEntities, oldSelectedEntities)
 	
 	for entity in oldSelectedEntities:
@@ -115,11 +140,12 @@ func remove_from_selection(entity):
 	if pos >= 0:
 		selectedEntities.remove(pos)
 
-func send_action_to_entities(action, args):
+func send_action_to_entities(action, args, team = Entity.TEAM_PLAYER):
 	for entity in selectedEntities:
-		if entity:
+		if entity && entity.team == team:
 			entity.perform_action(action, args)
 			
-func send_action_to_entities_by_hotkey(hotkey, args):
+func send_action_to_entities_by_hotkey(hotkey, args, team = Entity.TEAM_PLAYER):
 	for entity in selectedEntities:
-		entity.perform_action_by_hotkey(hotkey, args)
+		if entity && entity.team == team:
+			entity.perform_action_by_hotkey(hotkey, args)

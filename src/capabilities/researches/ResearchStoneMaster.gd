@@ -3,6 +3,7 @@ extends ProgressBaseCapability
 class_name ResearchStoneMasterCapability
 
 func _init():
+	capabilityName = "ResearchStoneMaster"
 	icon = IconResources.ICON_RESEARCH_STONE_MASTER
 	timeNeeded = 60
 	hotkey = KEY_S
@@ -15,8 +16,9 @@ func _init():
 	requirements.append(req)
 
 func progress_finished():
-	var sound = OneTimeSound.new()
-	sound.play(SoundResources.SOUND_EVENT, ownerEntity)
+	if ownerEntity.team == Entity.TEAM_PLAYER:
+		var sound = OneTimeSound.new()
+		sound.play(SoundResources.SOUND_EVENT, ownerEntity)
 
 	var entities = ownerEntity.level.entities.get_children()
 	for ent in entities:

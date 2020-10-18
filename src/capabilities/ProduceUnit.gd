@@ -18,5 +18,5 @@ func progress_finished():
 				pos = finalTransform.xform(pos)
 				unit.position = pos
 				ownerEntity.level.add_entity(unit)
-				if unit.has_node("ProducedSound"):
+				if ownerEntity.team == Entity.TEAM_PLAYER && unit.has_node("ProducedSound"):
 					unit.get_node("ProducedSound").play()

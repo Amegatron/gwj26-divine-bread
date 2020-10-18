@@ -49,6 +49,9 @@ func perform(args, internal = false):
 		proximity = 5
 	
 	if !internal:
+		if ownerEntity.currentAction:
+			ownerEntity.currentAction.cancel()
+			
 		ownerEntity.currentAction = self
 	
 	if !internal && confirmSound && ownerEntity.team == Entity.TEAM_PLAYER:
@@ -70,7 +73,8 @@ func process(delta):
 	if temporaryTarget is Entity && temporaryTarget.isDead:
 		temporaryTarget = null
 		closestEnemyRecalcTime = 0.0
-
+	
+	closestEnemy = null
 	closestEnemyRecalcTime += delta
 	if closestEnemyRecalcTime >= closestEnemyRecalcTimeout:
 		closestEnemyRecalcTime = 0.0 # or -closestEnemyRecalcTimeout
@@ -82,14 +86,17 @@ func process(delta):
 				if dist < minDistance:
 					minDistance = dist
 					closestEnemy = entity
-					
+		
+		if ownerEntity.isSelected:
+			pass
+			
 		if closestEnemy && (!currentTarget || currentTarget is Vector2 || currentTarget is Entity && wanderingTargetedAttack):
 			temporaryTarget = closestEnemy
-
-	
+		elif !closestEnemy:
+			temporaryTarget = null
 	
 func process_physics(delta):
-	if ownerEntity.currentAction && ownerEntity.currentAction != self:
+	if ownerEntity.currentAction && (ownerEntity.currentAction != self && ownerEntity.currentAction.capabilityName != "Pray"):
 		return
 			
 	stuckAccumulator -= delta
@@ -98,6 +105,9 @@ func process_physics(delta):
 			
 	if !moveCap:
 		moveCap = ownerEntity.get_capability("Move")
+		
+	if ownerEntity.isSelected:
+		pass
 		
 	var finalTarget = temporaryTarget if temporaryTarget else currentTarget
 	
@@ -119,6 +129,9 @@ func process_physics(delta):
 				if moveCap:
 					moveCap.cancel()
 					
+				if ownerEntity.currentAction && ownerEntity.currentAction.capabilityName == "Pray":
+					ownerEntity.currentAction.cancel()
+					
 				if !ownerEntity.currentAction:
 					ownerEntity.currentAction = self
 					
@@ -127,11 +140,18 @@ func process_physics(delta):
 						ownerEntity.set_look_direction(Entity.LOOK_LEFT)
 					else:
 						ownerEntity.set_look_direction(Entity.LOOK_RIGHT)
-						
+					
+					ownerEntity.animationPlayer.stop(true)
 					ownerEntity.animationPlayer.play("Attack")
 
 		if ownerEntity.animationPlayer.current_animation != "Attack":
+			if currentTarget is Vector2 && ownerEntity.position.distance_to(currentTarget) <= proximity:
+				cancel()
+				return
+
 			if moveCap && (typeof(moveCap.currentTarget) != typeof(finalTarget) || moveCap.currentTarget != finalTarget):
+				if ownerEntity.isSelected:
+					pass
 				ownerEntity.perform_action("Move", {"target": finalTarget, "proximity": proximity}, true)
 
 	elif ownerEntity.currentAction == self:
@@ -148,8 +168,11 @@ func perform_actual_attack(target):
 
 func cancel():
 	currentTarget = null
+	temporaryTarget = null
 	if moveCap:
 		moveCap.stuckAccumulator = 0.0
+		moveCap.cancel()
+		
 	if ownerEntity.currentAction == self:
 		ownerEntity.currentAction = null
 		

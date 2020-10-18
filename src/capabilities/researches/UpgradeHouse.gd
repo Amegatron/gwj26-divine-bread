@@ -18,8 +18,9 @@ func _init():
 	requirements.append(req)
 
 func progress_finished():
-	var sound = OneTimeSound.new()
-	sound.play(SoundResources.SOUND_EVENT, ownerEntity)
+	if ownerEntity.team == Entity.TEAM_PLAYER:
+		var sound = OneTimeSound.new()
+		sound.play(SoundResources.SOUND_EVENT, ownerEntity)
 	var manager = ownerEntity.level.gameManager
 	var res = manager.get_team_resource(ownerEntity.team)
 	res.increment_resource_by_type(TeamResources.TYPE_HOUSE_CAPACITY_MAX, upgradeAmount)

@@ -35,8 +35,9 @@ func _get_requirements_for_next_level(currentLevel):
 	return reqs
 
 func progress_finished():
-	var sound = OneTimeSound.new()
-	sound.play(SoundResources.SOUND_EVENT, ownerEntity)
+	if ownerEntity.team == Entity.TEAM_PLAYER:
+		var sound = OneTimeSound.new()
+		sound.play(SoundResources.SOUND_EVENT, ownerEntity)
 	var res = manager.get_team_resource(ownerEntity.team)
 	res.increment_resource_by_type(TeamResources.TYPE_MONUMENT_LEVEL)
 	_update_parameters()
