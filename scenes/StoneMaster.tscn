@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://src/entities/StoneMaster.gd" type="Script" id=1]
 [ext_resource path="res://images/stone_m_head.png" type="Texture" id=2]
@@ -9,7 +9,6 @@
 [ext_resource path="res://sounds/unit_produced_v1.wav" type="AudioStream" id=7]
 [ext_resource path="res://sounds/ranged_attack.wav" type="AudioStream" id=8]
 [ext_resource path="res://sounds/confirm.wav" type="AudioStream" id=9]
-[ext_resource path="res://src/TestAnimationPlayer.gd" type="Script" id=10]
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 6.5423
@@ -213,17 +212,18 @@ anims/Attack = SubResource( 2 )
 anims/Death = SubResource( 3 )
 anims/Pray = SubResource( 4 )
 anims/Walk = SubResource( 5 )
-script = ExtResource( 10 )
 
 [node name="AttackArea" type="Area2D" parent="."]
 visible = false
 position = Vector2( -5.6768e-05, 0 )
+monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea"]
 shape = SubResource( 6 )
 
 [node name="SightArea" type="Area2D" parent="."]
 visible = false
+monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SightArea"]
 shape = SubResource( 7 )

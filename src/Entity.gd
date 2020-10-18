@@ -64,13 +64,17 @@ func _ready():
 	connect("capability_added", self, "_on_capability_added")
 	connect("capability_removed", self, "_on_capability_removed")
 	
-func _physics_process(delta):
-	for capName in capabilities:
-		var cap = capabilities[capName]
+func _process(delta):
+	z_index = position.y
+
+	for cap in capabilities.values():
 		if !isDead || cap.activeOnDeadEntity:
 			cap.process(delta)
-		
-	z_index = position.y
+	
+func _physics_process(delta):
+	for cap in capabilities.values():
+		if !isDead || cap.activeOnDeadEntity:
+			cap.process_physics(delta)
 
 func get_capability(capabilityName):
 	if capabilities.has(capabilityName):

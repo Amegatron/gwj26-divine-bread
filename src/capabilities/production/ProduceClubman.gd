@@ -7,6 +7,7 @@ func _init():
 	capabilityName = "ProduceClubman"
 	icon = IconResources.ICON_CLUBMAN
 	description = "Make Clubman"
+	timeNeeded = 13
 	
 	var req = ResourceRequirement.new()
 	req.type = TeamResources.TYPE_BREADFORCE

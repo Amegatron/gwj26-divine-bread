@@ -26,6 +26,9 @@ func _set_owner(value):
 func process(delta):
 	pass
 
+func process_physics(delta):
+	pass
+
 func cancel():
 	pass
 

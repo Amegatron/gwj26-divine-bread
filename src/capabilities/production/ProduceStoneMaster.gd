@@ -8,6 +8,7 @@ func _init():
 	icon = IconResources.ICON_STONE_MASTER
 	hotkey = KEY_S
 	description = "Make Stone Master"
+	timeNeeded = 15
 	
 	var req = ResourceRequirement.new()
 	req.type = TeamResources.TYPE_BREADFORCE

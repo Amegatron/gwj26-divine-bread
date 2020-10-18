@@ -216,12 +216,14 @@ anims/Walk = SubResource( 5 )
 [node name="AttackArea" type="Area2D" parent="."]
 visible = false
 position = Vector2( -5.6768e-05, 0 )
+monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea"]
 shape = SubResource( 6 )
 
 [node name="SightArea" type="Area2D" parent="."]
 visible = false
+monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SightArea"]
 shape = SubResource( 7 )

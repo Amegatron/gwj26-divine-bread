@@ -23,14 +23,27 @@ func _ready():
 	
 	_init_entities()
 		
-	for i in range(25):
+	for _i in range(25):
 		unit = UnitFactory.createClubman(Entity.TEAM_PLAYER)
-		unit.position = Vector2(500 + randi()%200, 350 + randi()%100)
+		unit.position = Vector2(700 + randi()%200, 350 + randi()%100)
 		add_entity(unit)
+		unit.perform_action("Attack", {"target": Vector2(1800, 400)})
 		
-	for i in range(25):
+	for _i in range(15):
+		unit = UnitFactory.createStoneMaster(Entity.TEAM_PLAYER)
+		unit.position = Vector2(400 + randi()%200, 350 + randi()%100)
+		add_entity(unit)	
+		unit.perform_action("Attack", {"target": Vector2(1800, 400)})
+		
+	for _i in range(25):
 		unit = UnitFactory.createClubman(Entity.TEAM_ENEMY)
-		unit.position = Vector2(1200 + randi() % 200, 350 + randi()%100)
+		unit.position = Vector2(1500 + randi() % 200, 350 + randi()%100)
+		add_entity(unit)
+		unit.perform_action("Attack", {"target": $MapContainer/Entities/Monument, "wandering": true})
+
+	for _i in range(15):
+		unit = UnitFactory.createStoneMaster(Entity.TEAM_ENEMY)
+		unit.position = Vector2(1800 + randi() % 200, 350 + randi()%100)
 		add_entity(unit)
 		unit.perform_action("Attack", {"target": $MapContainer/Entities/Monument, "wandering": true})
 	
@@ -108,6 +121,7 @@ func _input(event):
 					elif !ent.isSelected:
 						ent.get_node("HealthBar").visible = false
 			
+	var proximity = max(0, (currentSelection.selectedEntities.size() - 1) * 10)
 	if event is InputEventMouse:
 		var globalEventPos = get_global_mouse_position()
 		if event.button_mask & BUTTON_LEFT:
@@ -125,7 +139,7 @@ func _input(event):
 				if testEntity:
 					target = testEntity
 					
-				currentSelection.send_action_to_entities(currentHandAction, {"target": target})
+				currentSelection.send_action_to_entities(currentHandAction, {"target": target, "proximity": proximity})
 				currentHandAction = null		
 		elif currentSelection.selectionStartPos:
 			var append = event.shift
@@ -137,14 +151,14 @@ func _input(event):
 				var entity = get_entity_at_position(globalEventPos)
 				if entity:
 					if entity.team == Entity.TEAM_ENEMY:
-						currentSelection.send_action_to_entities("Attack", {"target": entity})
+						currentSelection.send_action_to_entities("Attack", {"target": entity, "proximity": proximity})
 					elif entity.defaultTargetAction:
-						currentSelection.send_action_to_entities(entity.defaultTargetAction, {"target": entity})
+						currentSelection.send_action_to_entities(entity.defaultTargetAction, {"target": entity, "proximity": proximity})
 				else:
 					if globalEventPos.y < 230:
 						globalEventPos.y = 230
 						
-					currentSelection.send_action_to_entities("Move", {"target": globalEventPos})
+					currentSelection.send_action_to_entities("Move", {"target": globalEventPos, "proximity": proximity})
 
 func get_entity_at_position(pos):	
 	var ourShape = RectangleShape2D.new()
