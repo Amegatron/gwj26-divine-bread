@@ -184,6 +184,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://src/capabilities/Projectile.gd"
 }, {
+"base": "Object",
+"class": "PushGroup",
+"language": "GDScript",
+"path": "res://src/PushGroup.gd"
+}, {
+"base": "Capability",
+"class": "PushableCapability",
+"language": "GDScript",
+"path": "res://src/capabilities/Pushable.gd"
+}, {
 "base": "AttackCapability",
 "class": "RangedAttackCapability",
 "language": "GDScript",
@@ -310,6 +320,8 @@ _global_script_class_icons={
 "ProgressInfo": "",
 "Projectile": "",
 "ProjectileCapability": "",
+"PushGroup": "",
+"PushableCapability": "",
 "RangedAttackCapability": "",
 "ReactOnAttackCapability": "",
 "RequirementRow": "",

@@ -26,7 +26,7 @@ var ourUnits = []
 var newComers = []
 
 var timePassed = 0.0
-var attackDelay = 120.0
+var attackDelay = 60
 var attackTimer = attackDelay
 var defenderCounter = 0
 var startedToAttack = false
@@ -137,7 +137,7 @@ func ensure_praying():
 		var needed = prayableCap.maxPrayers - prayableCap.currentPrayers
 		for unit in idleUnits:
 			unit["unit"].get_capability("AIState").state = AIStateCapability.STATE_PRAYER
-			unit["unit"].perform_action("Pray", {"target": monument, "delay": 0.8})
+			unit["unit"].perform_action("Pray", {"target": monument})
 			counter += 1
 			if counter == needed:
 				break

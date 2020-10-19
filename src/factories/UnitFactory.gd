@@ -32,6 +32,9 @@ static func createClubman(team):
 	
 	cap = PrayCapability.new()
 	entity.add_capability(cap)
+	
+	cap = PushableCapability.new()
+	entity.add_capability(cap)
 		
 	return entity
 
@@ -58,6 +61,8 @@ static func createStoneMaster(team):
 	
 	cap = PrayCapability.new()
 	entity.add_capability(cap)
-
+	
+	cap = PushableCapability.new()
+	entity.add_capability(cap)
 	
 	return entity

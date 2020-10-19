@@ -16,6 +16,7 @@ var description = ""
 var ownerEntity setget _set_owner;
 
 signal requirements_changed
+signal finished
 
 func perform(args, internal = false):
 	pass

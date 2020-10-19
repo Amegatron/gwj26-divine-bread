@@ -77,7 +77,7 @@ func endSelection(pos, append = false):
 					objectCollides = true
 					break
 					
-			if objectCollides:
+			if objectCollides && !obj.isDead:
 				if obj.team == Entity.TEAM_PLAYER:
 					playerTeamSelected = true
 				elif obj.team == Entity.TEAM_ENEMY:

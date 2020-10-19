@@ -202,7 +202,6 @@ texture = ExtResource( 2 )
 offset = Vector2( -2.0219, -2.0134 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
 position = Vector2( -6.47279e-05, -2.56864 )
 rotation = 1.5708
 shape = SubResource( 1 )
@@ -219,6 +218,7 @@ position = Vector2( -5.6768e-05, 0 )
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea"]
+visible = false
 shape = SubResource( 6 )
 
 [node name="SightArea" type="Area2D" parent="."]
@@ -226,6 +226,7 @@ visible = false
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SightArea"]
+visible = false
 shape = SubResource( 7 )
 
 [node name="SelectionArea" type="Area2D" parent="."]
@@ -234,6 +235,7 @@ monitoring = false
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SelectionArea"]
+visible = false
 position = Vector2( 0.000115633, -16.2941 )
 shape = SubResource( 8 )
 

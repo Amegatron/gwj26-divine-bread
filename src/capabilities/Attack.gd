@@ -22,6 +22,9 @@ var temporaryTarget
 
 var proximity = 5
 
+var movingToTarget = false
+
+
 func _init():
 	capabilityName = "Attack"
 	hotkey = KEY_A
@@ -38,37 +41,28 @@ func _set_owner(value):
 	
 func perform(args, internal = false):
 	currentTarget = args["target"]
+	
 	if args.has("wandering"):
 		wanderingTargetedAttack = args["wandering"]
 	else:
 		wanderingTargetedAttack = false
-		
-	if args.has("proximity"):
-		proximity = max(5, args["proximity"])
-	else:
-		proximity = 5
-	
+			
 	if !internal:
-		if ownerEntity.currentAction:
+		if ownerEntity.currentAction && ownerEntity.currentAction != self:
 			ownerEntity.currentAction.cancel()
 			
 		ownerEntity.currentAction = self
 	
-	if !internal && confirmSound && ownerEntity.team == Entity.TEAM_PLAYER:
-		if !confirmSound.playing:
-			confirmSound.play()
+#	if !internal && confirmSound && ownerEntity.team == Entity.TEAM_PLAYER:
+#		if !confirmSound.playing:
+#			confirmSound.play()
 			
 	return true
 
 func process(delta):
-	if actualTarget is Entity && actualTarget.isDead:
-		actualTarget = null
-	
 	if currentTarget is Entity && currentTarget.isDead:
-		currentTarget = null
-		if ownerEntity.currentAction == self:
-			ownerEntity.currentAction = null
-			return
+		cancel()
+		return
 			
 	if temporaryTarget is Entity && temporaryTarget.isDead:
 		temporaryTarget = null
@@ -96,41 +90,44 @@ func process(delta):
 			temporaryTarget = null
 	
 func process_physics(delta):
-	if ownerEntity.currentAction && (ownerEntity.currentAction != self && ownerEntity.currentAction.capabilityName != "Pray"):
+	if ownerEntity.currentAction && ownerEntity.currentAction != self: # && ownerEntity.currentAction.capabilityName != "Pray"):
 		return
 			
-	stuckAccumulator -= delta
-	if stuckAccumulator > 0:
-		return
+#	stuckAccumulator -= delta
+#	if stuckAccumulator > 0:
+#		return
 			
 	if !moveCap:
 		moveCap = ownerEntity.get_capability("Move")
+		moveCap.connect("finished", self, "_on_move_finished")
 		
 	if ownerEntity.isSelected:
 		pass
 		
 	var finalTarget = temporaryTarget if temporaryTarget else currentTarget
 	
-	if moveCap.stuckAccumulator >= 1:
-#		moveCap.stuckAccumulator = 0.0
-		moveCap.cancel()
-		if currentTarget is Vector2 && ownerEntity.position.distance_to(currentTarget) > proximity:
-			stuckAccumulator = stuckTimeout
-			return
-		else:
-			cancel()
-		return
+#	if moveCap.stuckAccumulator >= 1:
+##		moveCap.stuckAccumulator = 0.0
+#		moveCap.cancel()
+#		if currentTarget is Vector2 && ownerEntity.position.distance_to(currentTarget) > proximity:
+#			stuckAccumulator = stuckTimeout
+#			return
+#		else:
+#			cancel()
+#		return
 		
 	actualTarget = null
 	if finalTarget:
 		if finalTarget is Entity && !finalTarget.isDead:
 			if ownerEntity.attackArea.overlaps_body(finalTarget):
 				actualTarget = finalTarget
+				movingToTarget = false
 				if moveCap:
+					# moveCap.disconnect("finished", self, "_on_move_finished")
 					moveCap.cancel()
 					
-				if ownerEntity.currentAction && ownerEntity.currentAction.capabilityName == "Pray":
-					ownerEntity.currentAction.cancel()
+#				if ownerEntity.currentAction && ownerEntity.currentAction.capabilityName == "Pray":
+#					ownerEntity.currentAction.cancel()
 					
 				if !ownerEntity.currentAction:
 					ownerEntity.currentAction = self
@@ -143,19 +140,24 @@ func process_physics(delta):
 					
 					ownerEntity.animationPlayer.stop(true)
 					ownerEntity.animationPlayer.play("Attack")
-
-		if ownerEntity.animationPlayer.current_animation != "Attack":
-			if currentTarget is Vector2 && ownerEntity.position.distance_to(currentTarget) <= proximity:
-				cancel()
+				
 				return
 
+		if ownerEntity.animationPlayer.current_animation != "Attack":
+#			if currentTarget is Vector2 && ownerEntity.position.distance_to(currentTarget) <= proximity:
+#				cancel()
+#				return
+			movingToTarget = true
 			if moveCap && (typeof(moveCap.currentTarget) != typeof(finalTarget) || moveCap.currentTarget != finalTarget):
-				if ownerEntity.isSelected:
-					pass
-				ownerEntity.perform_action("Move", {"target": finalTarget, "proximity": proximity}, true)
+				moveCap.perform({"target": finalTarget}, true)
 
 	elif ownerEntity.currentAction == self:
 		ownerEntity.currentAction = null
+
+func _on_move_finished():
+	if movingToTarget:
+		print ("Attack: move finished")
+		cancel()
 
 func _on_owner_animation_signal(signalName):
 	if signalName == "Attack" && actualTarget && !actualTarget.isDead:

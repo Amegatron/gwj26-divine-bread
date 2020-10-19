@@ -46,6 +46,15 @@ func _ready():
 		unit = UnitFactory.createClubman(Entity.TEAM_PLAYER)
 		unit.position = Vector2(500, 350 + i * 30)
 		add_entity(unit)
+
+#	for i in range(10):
+#		unit = UnitFactory.createClubman(Entity.TEAM_PLAYER)
+#		unit.position = Vector2(500 + randi()%200, 350 + randi()%100)
+#		add_entity(unit)
+#	for i in range(10):
+#		unit = UnitFactory.createStoneMaster(Entity.TEAM_PLAYER)
+#		unit.position = Vector2(500 + randi()%200, 350 + randi()%100)
+#		add_entity(unit)
 		
 	for i in range(4):
 		unit = UnitFactory.createClubman(Entity.TEAM_ENEMY)

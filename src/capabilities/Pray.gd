@@ -9,6 +9,9 @@ var animationPlayer
 var delayTime = 0.0
 var delayTimer = 0.0
 
+var isMovingToTarget = false
+var moveCap
+
 func _init():
 	capabilityName = "Pray"
 	hotkey = KEY_P
@@ -29,8 +32,8 @@ func _set_is_praying(value):
 	isPraying = value
 	if oldValue != value:
 		ownerEntity.emit_capability_signal(self, "praying", {"praying": value})
-		var moveCap = ownerEntity.get_capability("Move")
-		moveCap.cancel()
+		if moveCap && isMovingToTarget:
+			moveCap.cancel()
 		
 		if currentTarget is Entity:
 			if value:
@@ -39,15 +42,15 @@ func _set_is_praying(value):
 				else:
 					ownerEntity.set_look_direction(Entity.LOOK_RIGHT)
 					
-				if animationPlayer:
-					if animationPlayer.current_animation != "Pray":
-						animationPlayer.seek(0, true)
-						animationPlayer.play("Pray")
+				if animationPlayer && animationPlayer.current_animation != "Pray":
+					animationPlayer.stop(true)
+					animationPlayer.play("Pray")
+					
 				currentTarget.emit_capability_signal(self, "new_prayer", {})
 			else:
-				if animationPlayer:
+				if animationPlayer && animationPlayer.current_animation == "Pray":
 					animationPlayer.seek(0, true)
-					animationPlayer.stop()
+					animationPlayer.stop(true)
 					
 				currentTarget.emit_capability_signal(self, "prayer_left", {})
 				
@@ -72,14 +75,13 @@ func perform(args, internal = false):
 	delayTimer = 0.0
 	
 	if !internal:
-		if ownerEntity.currentAction:
+		if ownerEntity.currentAction && ownerEntity.currentAction != self:
 			ownerEntity.currentAction.cancel()
-
 		ownerEntity.currentAction = self
 	
-	if !internal && ownerEntity.has_node("ConfirmSound") && ownerEntity.team == Entity.TEAM_PLAYER:
-		if !ownerEntity.get_node("ConfirmSound").playing:
-			ownerEntity.get_node("ConfirmSound").play()
+#	if !internal && ownerEntity.has_node("ConfirmSound") && ownerEntity.team == Entity.TEAM_PLAYER:
+#		if !ownerEntity.get_node("ConfirmSound").playing:
+#			ownerEntity.get_node("ConfirmSound").play()
 			
 	if isInsidePrayArea && delayTime == 0.0:
 		self.isPraying = true
@@ -89,34 +91,32 @@ func perform(args, internal = false):
 func cancel():
 	self.isPraying = false
 	currentTarget = null
-	var moveCap = ownerEntity.get_capability("Move")
-	if moveCap:
+	if moveCap && isMovingToTarget:
 		moveCap.cancel()
-		moveCap.stuckAccumulator = 0.0
+		
+	isMovingToTarget = false
 
 func process(delta):
 	if ownerEntity.currentAction != self:
 		return
 			
 	if currentTarget is Entity && currentTarget.isDead:
-		currentTarget = null
-		if ownerEntity.currentAction == self:
-			ownerEntity.currentAction = null
-			return
-
-	var moveCap = ownerEntity.get_capability("Move")
-	
-	if moveCap.stuckAccumulator >= 1:
-		moveCap.cancel()
 		cancel()
-		
+		return
+
+	if !moveCap:
+		moveCap = ownerEntity.get_capability("Move")
+			
 	if !isInsidePrayArea:
-		if !moveCap.currentTarget && (typeof(moveCap.currentTarget) != typeof(currentTarget) || moveCap.currentTarget != currentTarget):
+		isMovingToTarget = true
+		if moveCap && (typeof(moveCap.currentTarget) != typeof(currentTarget) || moveCap.currentTarget != currentTarget):
 			moveCap.perform({"target": currentTarget}, true)
 	else:
 		if delayTime > 0 && delayTimer >= delayTime:
 			delayTimer = 0.0
-			moveCap.cancel()
+			if isMovingToTarget:
+				isMovingToTarget = false
+				moveCap.cancel()
 			self.isPraying = true
 		else:
 			delayTimer += delta
