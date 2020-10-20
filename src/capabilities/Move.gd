@@ -25,7 +25,10 @@ func perform(args, internal = false):
 	stuckAccumulator = 0.0
 	stuckWait = 0.0
 	noPushCounter = 0
-	pushGroup = null
+	
+	if pushGroup:
+		pushGroup.continuePushing = false
+		pushGroup = null
 	
 #	if !internal && ownerEntity.has_node("ConfirmSound") && ownerEntity.team == Entity.TEAM_PLAYER:
 #		if !ownerEntity.get_node("ConfirmSound").playing:
@@ -58,8 +61,9 @@ func process_physics(delta):
 			
 		var oldPos = ownerEntity.position
 		var dir = targetPosition - ownerEntity.position
+		var dirNormalized = dir.normalized()
 		if dir.length() > 1:
-			ownerEntity.move_and_slide(dir.normalized() * speed, Vector2(0, 0), false, 2)
+			ownerEntity.move_and_slide(dirNormalized * speed, Vector2(0, 0), false, 2)
 			if ownerEntity.get_slide_count() == 0:
 				if pushGroup:
 					noPushCounter += 1
@@ -83,7 +87,14 @@ func process_physics(delta):
 					if pushGroup.continuePushing:
 						var pushableCap = target.get_capability("Pushable")
 						if pushableCap:
-							pushableCap.queue_push(coll.normal * -1 * speed / 3, [pushGroup])
+							var pushDir
+#							pushDir = dir.normalized().tangent() * -sign(coll.normal.angle_to(dir))
+							pushDir = coll.normal * -1
+							var angle = pushDir.angle_to(dir)
+							# force some side-movement
+							if abs(angle) < PI/6:
+								pushDir = dirNormalized.rotated(PI/6 * -sign(angle))
+							pushableCap.queue_push(pushDir * speed / 3, [pushGroup])
 			
 			var diffX = ownerEntity.position.x - oldPos.x
 			if diffX > 0.2:

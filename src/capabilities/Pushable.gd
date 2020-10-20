@@ -21,7 +21,7 @@ func process_physics(delta):
 		
 	if counter > 0:
 		finalPush /= counter
-		ownerEntity.move_and_slide(finalPush, Vector2(0, 0), false, 2)
+		ownerEntity.move_and_slide(finalPush, Vector2(0, 0), false, 1)
 		for i in range(ownerEntity.get_slide_count()):
 			var coll = ownerEntity.get_slide_collision(i)
 			var target = coll.collider

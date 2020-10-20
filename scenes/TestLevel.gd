@@ -21,7 +21,7 @@ signal entity_died(entity)
 
 func _ready():
 	var unit
-	
+		
 	gameManager.level = self
 	gameManager.add_team(Entity.TEAM_PLAYER)
 	gameManager.add_team(Entity.TEAM_ENEMY)
@@ -47,13 +47,13 @@ func _ready():
 		unit.position = Vector2(500, 350 + i * 30)
 		add_entity(unit)
 
-#	for i in range(10):
+#	for i in range(20):
 #		unit = UnitFactory.createClubman(Entity.TEAM_PLAYER)
-#		unit.position = Vector2(500 + randi()%200, 350 + randi()%100)
+#		unit.position = Vector2(500 + randi()%300, 300 + randi()%200)
 #		add_entity(unit)
-#	for i in range(10):
+#	for i in range(20):
 #		unit = UnitFactory.createStoneMaster(Entity.TEAM_PLAYER)
-#		unit.position = Vector2(500 + randi()%200, 350 + randi()%100)
+#		unit.position = Vector2(500 + randi()%300, 300 + randi()%200)
 #		add_entity(unit)
 		
 	for i in range(4):

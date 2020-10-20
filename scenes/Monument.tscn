@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://src/entities/Monument.gd" type="Script" id=1]
 [ext_resource path="res://images/pedestal_with_bread.png" type="Texture" id=2]
@@ -15,9 +15,6 @@ shader_param/aura_color = Color( 0, 0, 0, 1 )
 radius = 340.846
 
 [sub_resource type="CircleShape2D" id=3]
-radius = 199.522
-
-[sub_resource type="CircleShape2D" id=4]
 radius = 260.0
 
 [node name="Monument" type="KinematicBody2D"]
@@ -38,13 +35,13 @@ visible = false
 shape = SubResource( 2 )
 
 [node name="SelectionArea" type="Area2D" parent="."]
-visible = false
+monitorable = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SelectionArea"]
-visible = false
-shape = SubResource( 3 )
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="SelectionArea"]
+polygon = PoolVector2Array( -140, 17, -168, -74, -140, -129, -11, -183, 80, -166, 111, -108, 99, -60, 155, -56, 208, 17, -39, 180, -144, 178, -182, 162, -219, 55 )
 
 [node name="BaloonPosition" type="Position2D" parent="."]
+visible = false
 position = Vector2( 140.638, -151.02 )
 
 [node name="HealthBar" parent="." instance=ExtResource( 4 )]
@@ -60,11 +57,12 @@ margin_bottom = 207.0
 rect_min_size = Vector2( 200, 10 )
 
 [node name="PrayArea" type="Area2D" parent="."]
+visible = false
 collision_layer = 4
 collision_mask = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PrayArea"]
-shape = SubResource( 4 )
+shape = SubResource( 3 )
 
 [node name="PrayersInfo" parent="." instance=ExtResource( 5 )]
 visible = false

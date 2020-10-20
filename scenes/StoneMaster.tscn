@@ -10,9 +10,7 @@
 [ext_resource path="res://sounds/ranged_attack.wav" type="AudioStream" id=8]
 [ext_resource path="res://sounds/confirm.wav" type="AudioStream" id=9]
 
-[sub_resource type="CapsuleShape2D" id=1]
-radius = 6.5423
-height = 12.8999
+[sub_resource type="CircleShape2D" id=1]
 
 [sub_resource type="Animation" id=2]
 length = 1.2
@@ -202,9 +200,7 @@ texture = ExtResource( 3 )
 offset = Vector2( -2.0219, -2.0134 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
-position = Vector2( -6.47279e-05, -2.56864 )
-rotation = 1.5708
+position = Vector2( 1.4192e-05, -2 )
 shape = SubResource( 1 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
