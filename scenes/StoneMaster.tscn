@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://src/entities/StoneMaster.gd" type="Script" id=1]
 [ext_resource path="res://images/stone_m_head.png" type="Texture" id=2]
@@ -11,6 +11,7 @@
 [ext_resource path="res://sounds/confirm.wav" type="AudioStream" id=9]
 
 [sub_resource type="CircleShape2D" id=1]
+radius = 16.0
 
 [sub_resource type="Animation" id=2]
 length = 1.2
@@ -159,8 +160,12 @@ extents = Vector2( 11.756, 17.4738 )
 [sub_resource type="CircleShape2D" id=9]
 radius = 13.9321
 
+[sub_resource type="CircleShape2D" id=10]
+radius = 45.0
+
 [node name="StoneMaster" type="KinematicBody2D"]
 rotation = -7.096e-06
+collision_layer = 32769
 script = ExtResource( 1 )
 
 [node name="SelectionCircle" type="ColorRect" parent="."]
@@ -213,6 +218,8 @@ anims/Walk = SubResource( 5 )
 visible = false
 position = Vector2( -5.6768e-05, 0 )
 monitorable = false
+collision_layer = 128
+collision_mask = 65536
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea"]
 shape = SubResource( 6 )
@@ -220,6 +227,8 @@ shape = SubResource( 6 )
 [node name="SightArea" type="Area2D" parent="."]
 visible = false
 monitorable = false
+collision_layer = 64
+collision_mask = 65536
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SightArea"]
 shape = SubResource( 7 )
@@ -228,6 +237,8 @@ shape = SubResource( 7 )
 visible = false
 monitoring = false
 monitorable = false
+collision_layer = 0
+collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SelectionArea"]
 position = Vector2( 0.000115633, -16.2941 )
@@ -265,3 +276,11 @@ collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PrayerArea"]
 shape = SubResource( 9 )
+
+[node name="FlockArea" type="Area2D" parent="."]
+monitorable = false
+collision_layer = 32
+collision_mask = 32768
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FlockArea"]
+shape = SubResource( 10 )

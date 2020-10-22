@@ -5,37 +5,40 @@ class_name PushableCapability
 var nextFramePushes = []
 var currentFramePushes = []
 
+var finalPush = Vector2(0, 0)
+var currentGroups = []
+
 func _init():
 	capabilityName = "Pushable"
 	
-func process_physics(delta):
+func get_current_frame_push():
 	var finalPush = Vector2(0, 0)
 	var currentGroups = {}
 	var counter = 0
-	for push in currentFramePushes:
-		var grp = push["group"]
-		if grp.continuePushing:
-			counter += 1
-			finalPush += push["dir"]
-			currentGroups[push["group"]] = push["group"]
+
+	if currentFramePushes.size() > 10:
+		pass
 		
-	if counter > 0:
-		finalPush /= counter
-		ownerEntity.move_and_slide(finalPush, Vector2(0, 0), false, 1)
-		for i in range(ownerEntity.get_slide_count()):
-			var coll = ownerEntity.get_slide_collision(i)
-			var target = coll.collider
-			if target is Entity:
-				for grp in currentGroups:
-					grp.add_entity(target)
-					
-				var pushableCap = target.get_capability(capabilityName)
-				if pushableCap:
-					pushableCap.queue_push(coll.normal * -1 * finalPush.length(), currentGroups.values())
-					
+	for push in currentFramePushes:
+		counter += 1
+		finalPush += push["dir"]
+		for grp in push["groups"]:
+			if grp.continuePushing:
+				currentGroups[grp] = grp
+				
+	if currentGroups.size() > 0 && counter > 0:
+		if counter > 0:
+			finalPush /= counter
+			return [finalPush, currentGroups]
+	else:
+		return [Vector2(0, 0), []]
+
+func process_physics(delta):		
+	var ret = get_current_frame_push()
+	finalPush = ret[0]
+	currentGroups = ret[1]	
 	currentFramePushes = nextFramePushes
 	nextFramePushes = []
 				
-func queue_push(dir, pushGroups):
-	for grp in pushGroups:
-		nextFramePushes.append({"dir": dir, "group": grp})
+func queue_push(dir, pushGroups, by):		
+	nextFramePushes.append({"dir": dir, "groups": pushGroups, "by": by})

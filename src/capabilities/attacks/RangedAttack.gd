@@ -25,7 +25,7 @@ func perform_actual_attack(target):
 	
 	var cap = ProjectileCapability.new()
 	cap.strength = strength
-	cap.speed = 500
+	cap.speed = 400
 	cap.target = target
 	
 	projectile.add_capability(cap)

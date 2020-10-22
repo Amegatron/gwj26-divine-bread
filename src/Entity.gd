@@ -10,10 +10,11 @@ var capabilities = {}
 var currentAction setget _set_current_action
 var type
 var isSelectable = true
-export var team : int
+export var team : int setget _set_team
 var isSelected setget _set_is_selected
 var isDead = false setget _set_is_dead
 var houseCapacityCost setget , _get_house_cost
+var lookDirection
 
 var level
 
@@ -22,6 +23,8 @@ var defaultTargetAction = "Move"
 var infoBaloon
 var actionsInfo
 var actionProgressInfo
+
+var lastVelocity = Vector2(0, 0) setget _set_velocity
 
 const LOOK_LEFT = -1
 const LOOK_RIGHT = 1
@@ -135,9 +138,13 @@ func set_current_action(capability):
 func set_look_direction(dir):
 	match dir:
 		LOOK_LEFT:
-			$Sprites.scale.x = 1
+			if lookDirection != LOOK_LEFT:
+				$Sprites.scale.x = 1
+				lookDirection = LOOK_LEFT
 		LOOK_RIGHT:
-			$Sprites.scale.x = -1
+			if lookDirection != LOOK_RIGHT:
+				$Sprites.scale.x = -1
+				lookDirection = LOOK_RIGHT
 
 func _set_is_selected(value):
 	isSelected = value
@@ -238,3 +245,9 @@ func _on_capability_removed(capabilityName):
 
 func emit_capability_signal(capability, signalName, args):
 	emit_signal("custom_capability_signal", capability, signalName, args)
+
+func _set_velocity(value):
+	lastVelocity = value
+
+func _set_team(value):
+	team = value

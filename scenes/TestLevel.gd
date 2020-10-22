@@ -46,20 +46,36 @@ func _ready():
 		unit = UnitFactory.createClubman(Entity.TEAM_PLAYER)
 		unit.position = Vector2(500, 350 + i * 30)
 		add_entity(unit)
-
-#	for i in range(20):
-#		unit = UnitFactory.createClubman(Entity.TEAM_PLAYER)
-#		unit.position = Vector2(500 + randi()%300, 300 + randi()%200)
-#		add_entity(unit)
-#	for i in range(20):
+#	for i in range(4):
 #		unit = UnitFactory.createStoneMaster(Entity.TEAM_PLAYER)
-#		unit.position = Vector2(500 + randi()%300, 300 + randi()%200)
+#		unit.position = Vector2(500, 350 + i * 30)
 #		add_entity(unit)
+
+#	for i in range(40):
+#		unit = UnitFactory.createClubman(Entity.TEAM_PLAYER)
+#		unit.position = Vector2(450 + randi()%350, 300 + randi()%200)
+#		add_entity(unit)
+#		unit.perform_action("Move", {"target": $MapContainer/Entities/MonumentEnemy, "wandering": true})
+#	for i in range(40):
+#		unit = UnitFactory.createStoneMaster(Entity.TEAM_PLAYER)
+#		unit.position = Vector2(450 + randi()%350, 300 + randi()%200)
+#		add_entity(unit)
+#		unit.perform_action("Move", {"target": $MapContainer/Entities/MonumentEnemy, "wandering": true})
 		
 	for i in range(4):
 		unit = UnitFactory.createClubman(Entity.TEAM_ENEMY)
 		unit.position = Vector2(1900, 350 + i * 30)
 		add_entity(unit)
+#	for i in range(40):
+#		unit = UnitFactory.createClubman(Entity.TEAM_ENEMY)
+#		unit.position = Vector2(1750 + randi()%350, 300 + randi() % 200)
+#		add_entity(unit)
+#		unit.perform_action("Move", {"target": $MapContainer/Entities/Monument, "wandering": true})
+#	for i in range(40):
+#		unit = UnitFactory.createStoneMaster(Entity.TEAM_ENEMY)
+#		unit.position = Vector2(1750 + randi()%350, 300 + randi() % 200)
+#		add_entity(unit)
+#		unit.perform_action("Move", {"target": $MapContainer/Entities/Monument, "wandering": true})
 	
 	currentSelection = Selection.new()
 	currentSelection.level = self
