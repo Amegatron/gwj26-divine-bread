@@ -43,7 +43,7 @@ monitorable = false
 polygon = PoolVector2Array( -140, 17, -168, -74, -140, -129, -11, -183, 80, -166, 111, -108, 99, -60, 155, -56, 208, 17, -39, 180, -144, 178, -182, 162, -219, 55 )
 
 [node name="BaloonPosition" type="Position2D" parent="."]
-position = Vector2( 140.638, -151.02 )
+position = Vector2( -119.505, -242.783 )
 
 [node name="HealthBar" parent="." instance=ExtResource( 4 )]
 visible = false

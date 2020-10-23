@@ -97,7 +97,7 @@ func endSelection(pos, append = false):
 
 	if playerTeamSelected || !enemyTeamSelected:
 		if tmpSelection[Entity.TEAM_PLAYER]["units"].size() > 0:
-			if selectedEntities.size() > 0 && selectedEntities[0].type == Entity.TYPE_UNIT && append:
+			if selectedEntities.size() > 0 && selectedEntities[0] && selectedEntities[0].type == Entity.TYPE_UNIT && append:
 				if deselect:
 					for tmp in tmpSelection[Entity.TEAM_PLAYER]["units"]:
 						if tmp.isSelected:

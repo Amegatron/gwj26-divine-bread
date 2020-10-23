@@ -5,6 +5,25 @@ class_name GameManager
 var teamResources = {} setget _set_team_resources, _get_team_resources
 var level setget _set_level
 
+var playerMonument setget _set_player_monument
+var enemyMonument setget _set_enemy_monument
+
+signal game_ended(winner)
+
+func _set_player_monument(value):
+	playerMonument = value
+	value.connect("died", self, "_on_monument_died", [Entity.TEAM_PLAYER])
+	
+func _set_enemy_monument(value):
+	enemyMonument = value
+	value.connect("died", self, "_on_monument_died", [Entity.TEAM_ENEMY])
+
+func _on_monument_died(team):
+	if team == Entity.TEAM_ENEMY:
+		emit_signal("game_ended", Entity.TEAM_PLAYER)
+	else:
+		emit_signal("game_ended", Entity.TEAM_ENEMY)
+	
 func add_team(team):
 	if !teamResources.has(team):
 		teamResources[team] = TeamResources.new(team)

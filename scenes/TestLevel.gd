@@ -31,6 +31,10 @@ func _ready():
 		
 	_init_entities()
 	
+	gameManager.playerMonument = $MapContainer/Entities/Monument
+	gameManager.enemyMonument = $MapContainer/Entities/MonumentEnemy
+	gameManager.connect("game_ended", self, "_on_game_ended")
+	
 	ai = AI.new()
 	ai.gameManager = gameManager
 	ai.cave = $MapContainer/Entities/EnemyCave
@@ -60,7 +64,7 @@ func _ready():
 #		unit = UnitFactory.createStoneMaster(Entity.TEAM_PLAYER)
 #		unit.position = Vector2(450 + randi()%350, 300 + randi()%200)
 #		add_entity(unit)
-#		unit.perform_action("Move", {"target": $MapContainer/Entities/MonumentEnemy, "wandering": true})
+#		unit.perform_action("Attack", {"target": $MapContainer/Entities/MonumentEnemy, "wandering": true})
 		
 	for i in range(4):
 		unit = UnitFactory.createClubman(Entity.TEAM_ENEMY)
@@ -75,13 +79,32 @@ func _ready():
 #		unit = UnitFactory.createStoneMaster(Entity.TEAM_ENEMY)
 #		unit.position = Vector2(1750 + randi()%350, 300 + randi() % 200)
 #		add_entity(unit)
-#		unit.perform_action("Move", {"target": $MapContainer/Entities/Monument, "wandering": true})
+#		unit.perform_action("Attack", {"target": $MapContainer/Entities/Monument, "wandering": true})
 	
 	currentSelection = Selection.new()
 	currentSelection.level = self
 	
 	ai.start()
 
+func _on_game_ended(winner):
+	var labelText
+	var sound
+	
+	ai.stop()
+	
+	if winner == Entity.TEAM_PLAYER:
+		labelText = "! VICTORY !"
+		sound = $WinSound
+	else:
+		labelText = "): DEFEAT :("
+		
+	if sound:
+		sound.play()
+		
+	var dialog = $CanvasLayer/GameEndedDialog
+	dialog.set_label(labelText)
+	dialog.visible = true
+	
 func _init_entities():
 	for ent in entities.get_children():
 		if ent is Entity:
@@ -249,3 +272,7 @@ func _on_entity_died(entity):
 		currentSelection.remove_from_selection(entity)
 		
 	emit_signal("entity_died", entity)
+
+
+func _on_VictoryButton_pressed():
+	get_tree().reload_current_scene()
