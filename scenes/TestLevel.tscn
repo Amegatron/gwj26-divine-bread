@@ -32,15 +32,15 @@
 [sub_resource type="LineShape2D" id=2]
 normal = Vector2( 0, 1 )
 
-[sub_resource type="LineShape2D" id=5]
-
-[sub_resource type="RectangleShape2D" id=3]
-extents = Vector2( 119.829, 199 )
+[sub_resource type="LineShape2D" id=3]
 
 [sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 119.829, 199 )
+
+[sub_resource type="RectangleShape2D" id=5]
 extents = Vector2( 215.665, 195.211 )
 
-[sub_resource type="StyleBoxFlat" id=8]
+[sub_resource type="StyleBoxFlat" id=6]
 bg_color = Color( 0.227451, 0.219608, 0.2, 1 )
 border_width_left = 2
 border_width_top = 2
@@ -52,14 +52,14 @@ corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
-[sub_resource type="DynamicFont" id=6]
+[sub_resource type="DynamicFont" id=7]
 size = 48
 font_data = ExtResource( 10 )
 
-[sub_resource type="StyleBoxFlat" id=9]
+[sub_resource type="StyleBoxFlat" id=8]
 bg_color = Color( 0.505882, 0.360784, 0.231373, 1 )
 
-[sub_resource type="StyleBoxFlat" id=11]
+[sub_resource type="StyleBoxFlat" id=9]
 content_margin_left = 5.0
 content_margin_right = 5.0
 content_margin_top = 5.0
@@ -69,7 +69,7 @@ bg_color = Color( 0.8, 0.572549, 0.368627, 1 )
 [sub_resource type="StyleBoxFlat" id=10]
 bg_color = Color( 0.298039, 0.2, 0.113725, 1 )
 
-[sub_resource type="DynamicFont" id=7]
+[sub_resource type="DynamicFont" id=11]
 size = 28
 font_data = ExtResource( 10 )
 
@@ -127,7 +127,7 @@ shape = SubResource( 2 )
 position = Vector2( 0, 600 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MapContainer/CliffLine2"]
-shape = SubResource( 5 )
+shape = SubResource( 3 )
 
 [node name="EnemyAlarmZone" type="Area2D" parent="MapContainer"]
 collision_layer = 0
@@ -135,7 +135,7 @@ collision_mask = 32768
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MapContainer/EnemyAlarmZone"]
 position = Vector2( 1763.45, 400 )
-shape = SubResource( 3 )
+shape = SubResource( 4 )
 
 [node name="EnemyCriticalZone" type="Area2D" parent="MapContainer"]
 position = Vector2( 1983.39, 326.636 )
@@ -144,7 +144,7 @@ collision_mask = 32768
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MapContainer/EnemyCriticalZone"]
 position = Vector2( 117.617, 73.4171 )
-shape = SubResource( 4 )
+shape = SubResource( 5 )
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -164,7 +164,7 @@ margin_left = 510.0
 margin_top = 298.0
 margin_right = 514.0
 margin_bottom = 302.0
-custom_styles/panel = SubResource( 8 )
+custom_styles/panel = SubResource( 6 )
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/GameEndedDialog/PanelContainer"]
 margin_left = 2.0
@@ -185,7 +185,7 @@ margin_bottom = 92.0
 [node name="Label" type="Label" parent="CanvasLayer/GameEndedDialog/PanelContainer/MarginContainer/VBoxContainer"]
 margin_right = 240.0
 margin_bottom = 49.0
-custom_fonts/font = SubResource( 6 )
+custom_fonts/font = SubResource( 7 )
 custom_colors/font_color = Color( 0.839216, 0.513726, 0, 1 )
 text = "! VICTORY !"
 
@@ -193,10 +193,10 @@ text = "! VICTORY !"
 margin_top = 53.0
 margin_right = 240.0
 margin_bottom = 82.0
-custom_styles/hover = SubResource( 9 )
-custom_styles/pressed = SubResource( 11 )
+custom_styles/hover = SubResource( 8 )
+custom_styles/pressed = SubResource( 9 )
 custom_styles/normal = SubResource( 10 )
-custom_fonts/font = SubResource( 7 )
+custom_fonts/font = SubResource( 11 )
 text = "RESTART"
 
 [node name="Camera2D" type="Camera2D" parent="."]

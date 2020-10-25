@@ -41,6 +41,7 @@ func _set_owner(value):
 	
 func perform(args, internal = false):
 	currentTarget = args["target"]
+	temporaryTarget = null
 	
 	if args.has("wandering"):
 		wanderingTargetedAttack = args["wandering"]
@@ -166,7 +167,7 @@ func _on_owner_animation_signal(signalName):
 		perform_actual_attack(actualTarget)
 
 func perform_actual_attack(target):
-	target.perform_action("TakeDamage", {"strength": strength}, true)
+	target.perform_action("TakeDamage", {"strength": strength, "from": ownerEntity}, true)
 
 func cancel():
 	currentTarget = null

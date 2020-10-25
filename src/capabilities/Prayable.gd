@@ -11,7 +11,7 @@ signal prayers_changed(oldValue, newValue)
 func _init():
 	capabilityName = "Prayable"
 	isInHotBar = false
-	maxPrayers = 16
+	maxPrayers = 12
 
 func _set_owner(value):
 	._set_owner(value)

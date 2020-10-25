@@ -28,7 +28,7 @@ func _ready():
 	
 	gameManager.get_team_resource(Entity.TEAM_PLAYER).set_resource_by_type(TeamResources.TYPE_BREADFORCE, 10)
 	gameManager.get_team_resource(Entity.TEAM_ENEMY).set_resource_by_type(TeamResources.TYPE_BREADFORCE, 10)
-		
+			
 	_init_entities()
 	
 	gameManager.playerMonument = $MapContainer/Entities/Monument
@@ -44,6 +44,7 @@ func _ready():
 	ai.team = Entity.TEAM_ENEMY
 	ai.mapPosition = AI.MAP_POSITION_RIGHT
 	ai.alarmZone = $MapContainer/EnemyAlarmZone
+	ai.criticalZone = $MapContainer/EnemyCriticalZone
 	add_child(ai)
 		
 	for i in range(4):
@@ -137,7 +138,11 @@ func _init_cave(cave):
 	cave.add_capability(cap)
 
 	cap = UpgradeHouseCapability.new()
+	cap.affectedByBonuses = ["MonumentBonus"]
 	cap.hotkey = KEY_U
+	cave.add_capability(cap)
+	
+	cap = MonumentBonusCapability.new()
 	cave.add_capability(cap)
 
 func _init_monument(monument):
@@ -160,7 +165,7 @@ func _init_monument(monument):
 	monument.add_capability(cap)
 	
 	cap = PrayableBonusCapability.new()
-	monument.add_capability(cap)	
+	monument.add_capability(cap)
 
 func get_capability_by_hotkey_in_selection(scancode):
 	if currentSelection.selectedEntities.size() > 0:
@@ -173,7 +178,7 @@ func get_capability_by_hotkey_in_selection(scancode):
 	else:
 		return null
 	
-func _input(event):		
+func _unhandled_input(event):
 	if event is InputEventKey:
 		if event.scancode == KEY_F && event.is_pressed():
 			OS.window_fullscreen = !OS.window_fullscreen

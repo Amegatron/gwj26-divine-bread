@@ -51,10 +51,34 @@ func _set_critical_zone(value):
 func _critical_area_entered(body, entered):
 	if entered:
 		enemiesInCriticalZone.append(body)
+		var minDistance = 10000
+		var closestUnit = null
+		for unit in ourUnits:
+			if !unit.currentAction || unit.currentAction.capabilityName == "Pray":
+				var dist = unit.position.distance_to(body.position)
+				if dist < minDistance:
+					minDistance = dist
+					closestUnit = unit
+			elif unit.currentAction && unit.currentAction.capabilityName == "Attack" && unit.currentAction.currentTarget is Entity && unit.currentAction.currentTarget == body:
+				# these's already a defending unit
+				return
+				
+		if closestUnit:
+			closestUnit.perform_action("Attack", {"target": body, "wandering": true})
 	else:
 		var pos = enemiesInCriticalZone.find(body)
 		if pos >= 0:
 			enemiesInCriticalZone.remove(pos)
+			
+		if prayableCap && prayableCap.currentPrayers < prayableCap.maxPrayers:
+			var free = prayableCap.maxPrayers - prayableCap.currentPrayers
+			var counter = 0
+			for unit in ourUnits:
+				if unit.currentAction && unit.currentAction.capabilityName == "Attack" && unit.currentAction is Entity && unit.currentAction.currentTarget == body:
+					unit.perform_action("Pray", {"target": monument})
+					counter += 1
+					if counter >= free:
+						break
 	
 func _set_monument(value):
 	monument = value

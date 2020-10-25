@@ -14,7 +14,7 @@ func _perform_periodic_capability():
 	res.set_resource_by_type(TeamResources.TYPE_BREADFORCE, res.get_resource_by_type(TeamResources.TYPE_BREADFORCE) + amount)
 
 func _get_amount_for_level(level):
-	return level
+	return min(level, 5)
 	
 func _get_period():
 	return period

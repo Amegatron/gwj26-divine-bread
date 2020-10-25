@@ -26,12 +26,18 @@ func _on_icon_mouse_enter(icon):
 func _on_icon_mouse_exit(icon):
 	emit_signal("show_tooltip", null)
 
+func _on_icon_gui_input(event, icon):
+	if event is InputEventMouseButton:
+		if event.is_pressed() && event.button_index == BUTTON_LEFT && icon.capability.ownerEntity.team == Entity.TEAM_PLAYER:
+			icon.capability.ownerEntity.perform_action(icon.capability.capabilityName, {})
+
 func _create_action_icon(cap):
 	var icon = load("res://scenes/ui/ActionIcon.tscn").instance()
 	icon.capability = cap
 	
 	icon.connect("mouse_entered", self, "_on_icon_mouse_enter", [icon])
 	icon.connect("mouse_exited", self, "_on_icon_mouse_exit", [icon])
+	icon.connect("gui_input", self, "_on_icon_gui_input", [icon])
 		
 	return icon
 

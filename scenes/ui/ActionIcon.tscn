@@ -16,7 +16,7 @@ corner_radius_top_right = 1
 corner_radius_bottom_right = 1
 corner_radius_bottom_left = 1
 
-[sub_resource type="DynamicFont" id=3]
+[sub_resource type="DynamicFont" id=2]
 use_filter = true
 font_data = ExtResource( 3 )
 
@@ -55,7 +55,7 @@ margin_right = 40.0
 margin_bottom = 17.0
 size_flags_horizontal = 5
 size_flags_vertical = 5
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "A"
 align = 1
