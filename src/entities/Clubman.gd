@@ -15,6 +15,9 @@ func _init():
 	health	 = maxHealth
 	houseCapacityCost = UnitHouseCapacities.HOUSE_CAPACITY_CLUBMAN
 	
+func _ready():
+	connect("died", self, "_on_died")
+
 func _set_is_selected(value):
 	._set_is_selected(value)
 	selectionCircle.visible = value
@@ -39,3 +42,6 @@ func _set_team(value):
 		
 		$FlockArea.set_collision_mask_bit(15, false)
 		$FlockArea.set_collision_mask_bit(16, true)
+		
+func _on_died():
+	$CollisionShape2D.disabled = true

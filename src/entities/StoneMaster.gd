@@ -15,9 +15,8 @@ func _init():
 	health = maxHealth
 	houseCapacityCost = UnitHouseCapacities.HOUSE_CAPACITY_STONE_MASTER
 	
-# Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	connect("died", self, "_on_died")
 
 func _set_is_selected(value):
 	._set_is_selected(value)
@@ -43,3 +42,6 @@ func _set_team(value):
 		
 		$FlockArea.set_collision_mask_bit(15, false)
 		$FlockArea.set_collision_mask_bit(16, true)
+
+func _on_died():
+	$CollisionShape2D.disabled = true

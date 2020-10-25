@@ -65,7 +65,6 @@ position = Vector2( -25, 117 )
 shape = SubResource( 3 )
 
 [node name="PrayersInfo" parent="." instance=ExtResource( 5 )]
-visible = false
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5

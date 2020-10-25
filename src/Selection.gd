@@ -141,11 +141,19 @@ func remove_from_selection(entity):
 		selectedEntities.remove(pos)
 
 func send_action_to_entities(action, args, team = Entity.TEAM_PLAYER):
+	var sent = false
 	for entity in selectedEntities:
 		if entity && entity.team == team:
+			sent = true
 			entity.perform_action(action, args)
 			
+	return sent
+			
 func send_action_to_entities_by_hotkey(hotkey, args, team = Entity.TEAM_PLAYER):
+	var sent = false
 	for entity in selectedEntities:
 		if entity && entity.team == team:
+			sent = true
 			entity.perform_action_by_hotkey(hotkey, args)
+
+	return sent

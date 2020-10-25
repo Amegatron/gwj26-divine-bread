@@ -25,8 +25,8 @@ size = 20
 font_data = ExtResource( 2 )
 
 [node name="PrayersInfo" type="PanelContainer"]
-margin_right = 56.0
-margin_bottom = 46.0
+margin_right = 71.0
+margin_bottom = 57.0
 custom_styles/panel = SubResource( 1 )
 script = ExtResource( 3 )
 __meta__ = {
@@ -73,7 +73,7 @@ align = 1
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
 margin_top = 28.0
-margin_right = 63.0
+margin_right = 61.0
 margin_bottom = 49.0
 custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0.00784314, 1, 0, 1 )

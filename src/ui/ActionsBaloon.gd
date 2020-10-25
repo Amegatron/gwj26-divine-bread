@@ -2,7 +2,7 @@ extends PanelContainer
 
 class_name ActionsBaloon
 
-onready var container = $VBoxContainer/ContentContainer/MarginContainer setget , _get_container
+onready var container = $VBoxContainer/HBoxContainer/ContentContainer/MarginContainer setget , _get_container
 onready var tooltipContainer = $VBoxContainer/TooltipContainer setget , _get_tooltip_container
 
 func _ready():

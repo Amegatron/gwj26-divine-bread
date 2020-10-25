@@ -6,6 +6,7 @@ onready var entities = $MapContainer/Entities
 onready var canvasLayer = $CanvasLayer
 onready var gameManager = $GameManager
 onready var camera = $Camera2D
+onready var confirmSound = $ConfirmSound
 
 var ai
 
@@ -234,17 +235,21 @@ func _unhandled_input(event):
 			
 		if event.button_mask & BUTTON_RIGHT:
 			if event.is_pressed():
+				var sent = false
 				var entity = get_entity_at_position(globalEventPos)
 				if entity:
 					if entity.team == Entity.TEAM_ENEMY:
-						currentSelection.send_action_to_entities("Attack", {"target": entity, "proximity": proximity})
+						sent = currentSelection.send_action_to_entities("Attack", {"target": entity, "proximity": proximity})
 					elif entity.defaultTargetAction:
-						currentSelection.send_action_to_entities(entity.defaultTargetAction, {"target": entity, "proximity": proximity})
+						sent = currentSelection.send_action_to_entities(entity.defaultTargetAction, {"target": entity, "proximity": proximity})
 				else:
 					if globalEventPos.y < 230:
 						globalEventPos.y = 230
 						
-					currentSelection.send_action_to_entities("Move", {"target": globalEventPos, "proximity": proximity})
+					sent = currentSelection.send_action_to_entities("Move", {"target": globalEventPos, "proximity": proximity})
+					
+				if sent && !confirmSound.playing:
+					confirmSound.play()
 
 func get_entity_at_position(pos):	
 	var ourShape = RectangleShape2D.new()
